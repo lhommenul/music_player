@@ -1,0 +1,10 @@
+.result{
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    justify-content: center;
+    align-items: center;
+}
+    .btn_res{
+        place-self: center;
+        border-radius: 50%;
+    }

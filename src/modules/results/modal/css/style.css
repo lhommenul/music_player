@@ -1,0 +1,10 @@
+.modal{
+    visibility: visible;
+    height: 90vh;
+    width: 90vw;
+    background-color: whitesmoke;
+    box-shadow: 2px 2xp 6px grey;
+}
+.display_none{
+    visibility: hidden;
+}
