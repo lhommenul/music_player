@@ -1,37 +1,34 @@
-import React from 'react'
+import {React,useState} from 'react'
 import Result from './result/Result'
-
-let list_res = [
-    {
-
-    },
-    {
-
-    },
-    {
-
-    },
-    {
-
-    },
-]
-
+import {EventEmitter} from "../event/index"
 const Results = (props) => {
+    const [list_res, setstate] = useState([]);
+    EventEmitter.subscribe("getResultsFromApi",data=>{
+        setstate(data.data["artists"]);
+    })
     return (
         <section>
             {/* MESSAGE */}
             <div>
-
+                <h1>Aucun resultats</h1>
+                {/* HEADER */}
+                <div className="result">
+                    <span>line number</span>
+                    <p>Artist Name</p>
+                    <p>Music Title</p>
+                    <p>Album Title</p>
+                    <p>Show More</p>
+                </div>
             </div>
             {/* LIST ALL RESULTS */}
             <ul className="list_res">
                 {list_res.map((e,i)=>{
-                    return <Result store={props.store} key={i} index={i}></Result>
+                    return <Result key={i} data={e} index={i}></Result>
                 })}
             </ul>
             {/* SPINNER LOADER */}
             <div>
-
+                <img src="../../../téléchargement.gif" alt="spinner" />
             </div>
         </section>
     )

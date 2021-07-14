@@ -1,0 +1,8 @@
+.result{
+    min-width: 100%;
+    display: grid;
+    grid-template-columns: repeat(5,1fr);
+    justify-content: center;
+    align-items: center;
+    box-shadow: 2px 2px 6px grey;
+}

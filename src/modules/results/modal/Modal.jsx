@@ -12,6 +12,11 @@ const Modal = (props) => {
     });
     useEffect(() => {
         setModalState()
+        // Close Modal on button click
+        document.querySelector(".modal_btn").addEventListener('click',e=>{
+            state = !state;
+            setModalState()  
+        })
     }, []);
     function setModalState() {
         let i = document.querySelector("#modal_window");
@@ -26,7 +31,7 @@ const Modal = (props) => {
         <div id="modal_window">
             <button className="modal_btn">x</button>
             <div className="modal_content">
-                
+
             </div>
         </div>
     )
