@@ -1,5 +1,5 @@
 import React from 'react'
-import {req}from "../request/req"
+import {reqFromApi}from "../request/req"
 import "./css/style.css"
 import {useEffect} from "react"
 import {EventEmitter} from "../event/index"
@@ -10,10 +10,9 @@ const SearchBar = () => {
             let search_inp = e.target["search_inp"].value;
             let select_opt = e.target["select_opt"].value;
             e.preventDefault()
-            req(select_opt,search_inp)
+            reqFromApi(select_opt,search_inp)
             .then(data=>{
                 EventEmitter.dispatch('getResultsFromApi',data)
-                console.log(data);
             })
             .catch(err=>{
                 console.error(err);
@@ -33,9 +32,9 @@ const SearchBar = () => {
                 {/* SELECT */}
                 <select name="select_opt" id="">
                     <option value="artist">artist</option>
-                    <option value="album">album</option>
+                    <option value="release">album</option>
                     <option value="everything">everything</option>
-                    <option value="title">title</option>
+                    <option value="recording">title</option>
                 </select>
                 <button type="submit">Search</button>                
             </form>
