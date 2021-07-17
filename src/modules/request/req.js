@@ -28,15 +28,25 @@ let reqAlbum = (query)=>{
         return error;
     }
 }
-let reqTitle = (query)=>{
+let reqTitle = async (query)=>{
     try {
-        return axios({
+        return await axios({
             url:`https://musicbrainz.org/ws/2/recording`,
             method:"GET",
             params:{
                 query:`recording:${query}`,
                 fmt:"json"
             }
+        })
+        .then(res=>{
+            return {
+                artist_name:res.data.recordings[0]["artist-credit"][0].name,
+                music_title:res.data.recordings[0].title,
+                album_title:res.data.recordings[0].releases[0].title,
+            }
+        })
+        .catch(err=>{
+            return err;
         })
     } catch (error) {
         return error;

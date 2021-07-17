@@ -6,17 +6,18 @@ import {EventEmitter} from "../event/index"
 
 const SearchBar = () => {
     useEffect(() => {
-        document.querySelector("#form_search").addEventListener("submit",e=>{
+        document.querySelector("#form_search").addEventListener("submit",async (e)=>{
             let search_inp = e.target["search_inp"].value;
             let select_opt = e.target["select_opt"].value;
             e.preventDefault()
-            reqFromApi(select_opt,search_inp)
-            .then(data=>{
-                EventEmitter.dispatch('getResultsFromApi',data)
-            })
-            .catch(err=>{
-                console.error(err);
-            })
+            let res = await reqFromApi(select_opt,search_inp)
+            console.log(res);
+            // .then(data=>{
+            //     EventEmitter.dispatch('getResultsFromApi',data)
+            // })
+            // .catch(err=>{
+            //     console.error(err);
+            // })
         })
         return () => {
             
