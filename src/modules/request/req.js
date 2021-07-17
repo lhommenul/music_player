@@ -14,15 +14,26 @@ let reqArtist = (query)=>{
         return error;
     }
 }
-let reqAlbum = (query)=>{
+let reqAlbum = async (query)=>{
     try {
-        return axios({
+        return await axios({
             url:`https://musicbrainz.org/ws/2/release`,
             method:"GET",
             params:{
                 query:`title:${query}`,
                 fmt:"json"
             }
+        })
+        .then(res=>{
+            console.log(res.data.releases[0]);
+            return {
+                artist_name:res.data.releases[0]["artist-credit"][0].name,
+                music_title:undefined,
+                album_title:undefined,
+            }
+        })
+        .catch(err=>{
+            return err;
         })
     } catch (error) {
         return error;
