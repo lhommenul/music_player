@@ -5,6 +5,7 @@ import "./css/style.css"
 const Result = (props) => {
     let nb = props.index;
     let data = props.data;
+    console.log(props.data);
     let _id = 89654;
     useEffect(() => {
         document.getElementsByClassName('btn_res')[props.index].addEventListener('click',e=>{
@@ -14,7 +15,7 @@ const Result = (props) => {
     return (
         <li className="result">
             <span>{nb}</span>
-            <p>{data.name}</p>
+            <p>{data?.name}</p>
             <p>Title</p>
             <p>Album</p>
             <button className="btn_res" data-id={_id} >+</button>

@@ -11,11 +11,12 @@ const Results = (props) => {
                 'releases',
                 'recordings',
             ]
-            .map(value=>{
-                if (res.data[value]!= undefined) {
-                    return res.data[value];
+            .reduce((acc,current)=>{
+                if (res.data[current]!= undefined) {
+                    acc.push(res.data[current]);
                 }   
-            }))
+                return acc;
+            },[]))
             console.log(list_res);
         })
         
@@ -37,8 +38,9 @@ const Results = (props) => {
             {/* LIST ALL RESULTS */}
             <ul className="list_res">
                 {list_res.map((e,i)=>{
-                    console.log(e);
-                    return <Result key={i} data={e} index={i}></Result>
+                    return e.map((value,index)=>{
+                        return <Result key={`${i}_${index}`} data={value} index={i}></Result>
+                    })
                 })}
             </ul>
             {/* SPINNER LOADER */}
