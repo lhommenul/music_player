@@ -1,26 +1,11 @@
-import {React,useState,useEffect} from 'react'
+import {React,useState} from 'react'
 import Result from './result/Result'
 import {EventEmitter} from "../event/index"
-import {reqFromApi}from "../request/req"
 const Results = (props) => {
-    let [list_res, setstate] = useState([]);
-    useEffect(() => {
-        EventEmitter.subscribe("getResultsFromApi",res=>{
-            setstate( list_res = [
-                'artists',
-                'releases',
-                'recordings',
-            ]
-            .reduce((acc,current)=>{
-                if (res.data[current]!= undefined) {
-                    acc.push(res.data[current]);
-                }   
-                return acc;
-            },[]))
-            console.log(list_res);
-        })
-        
-    }, [])
+    const [list_res, setstate] = useState([]);
+    EventEmitter.subscribe("getResultsFromApi",(data)=>{
+        setstate(data[0].data[data[1]]);
+    })
     return (
         <section>
             {/* MESSAGE */}
@@ -38,9 +23,7 @@ const Results = (props) => {
             {/* LIST ALL RESULTS */}
             <ul className="list_res">
                 {list_res.map((e,i)=>{
-                    return e.map((value,index)=>{
-                        return <Result key={`${i}_${index}`} data={value} index={i}></Result>
-                    })
+                    return <Result key={i} data={e} index={i}></Result>
                 })}
             </ul>
             {/* SPINNER LOADER */}
