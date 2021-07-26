@@ -1,5 +1,12 @@
 import axios from "axios"
 
+let obj = {
+    artist_name:undefined,
+    music_title:undefined,
+    album_title:undefined,
+    data:[]
+}
+
 let reqArtist = (query)=>{
     try {
         return axios({
