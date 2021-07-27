@@ -1,6 +1,6 @@
 import { EventEmitter} from "../../event/index"
 import { React,useEffect } from 'react';
-
+import { reqTitle } from "../../request/req";
 import "./css/style.css"
 
 
@@ -15,7 +15,12 @@ const Result = ({index,data,type}) => {
     function requestMissingData(data_type) {
         switch (data_type) {
             case 'artist':
-                console.log("artist");
+                console.log('REQUEST');
+                setTimeout(()=>{
+                    reqTitle(data.name).then(res=>{
+                        console.log(res);
+                    })
+                },Math.random()*10)
                 break;
         
             default:

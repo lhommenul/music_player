@@ -12,6 +12,7 @@ let reqArtist = (query)=>{
         return axios({
             url:`https://musicbrainz.org/ws/2/artist`,
             method:"GET",
+            mode:'no-cors',
             params:{
                 query:`artist:${query}`,
                 fmt:"json"
@@ -46,22 +47,16 @@ let reqAlbum = async (query)=>{
         return error;
     }
 }
-let reqTitle = async (query)=>{
+let reqTitle = (query)=>{
     try {
-        return await axios({
+        return axios({
             url:`https://musicbrainz.org/ws/2/recording`,
             method:"GET",
+            mode:'no-cors',
             params:{
-                query:`recording:${query}`,
-                fmt:"json"
-            }
-        })
-        .then(res=>{
-            return {
-                artist_name:res.data.recordings[0]["artist-credit"][0].name,
-                music_title:res.data.recordings[0].title,
-                album_title:res.data.recordings[0].releases[0].title,
-            }
+                query:`recording:${encodeURIComponent(query)}`,
+                fmt:"json",
+            },
         })
         .catch(err=>{
             return err;
