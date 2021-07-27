@@ -12,9 +12,12 @@ const SearchBar = () => {
             e.preventDefault()
             reqFromApi(select_opt,search_inp)
             .then(data=>{
-                console.log(data.data);
-            })
-           // EventEmitter.dispatch('getResultsFromApi',[data,p])
+                let normalized_data = {
+                    data:data.data.artists,
+                    type:select_opt
+                }
+                EventEmitter.dispatch('getResultsFromApi',normalized_data)
+            })  
         })
         return () => {
             

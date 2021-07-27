@@ -1,11 +1,13 @@
-import {React,useState} from 'react'
+import {React,useState,useEffect} from 'react'
 import Result from './result/Result'
 import {EventEmitter} from "../event/index"
 const Results = (props) => {
     const [list_res, setstate] = useState([]);
-    EventEmitter.subscribe("getResultsFromApi",(data)=>{
-        setstate(data[0].data[data[1]]);
-    })
+    useEffect(() => {
+        EventEmitter.subscribe("getResultsFromApi",(response)=>{
+            setstate(response);
+        })
+    }, [])
     return (
         <section>
             {/* MESSAGE */}
@@ -22,8 +24,8 @@ const Results = (props) => {
             </div>
             {/* LIST ALL RESULTS */}
             <ul className="list_res">
-                {list_res.map((e,i)=>{
-                    return <Result key={i} data={e} index={i}></Result>
+                {list_res?.data?.map((e,i)=>{
+                    return <Result key={i} data={e} type={list_res?.type} index={i}></Result>
                 })}
             </ul>
             {/* SPINNER LOADER */}
