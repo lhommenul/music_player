@@ -17,6 +17,18 @@ let reqArtist = (query)=>{
                 fmt:"json"
             }
         })
+        .then(e=>{
+            e.data.artists.forEach(element => {
+                axios({
+                    url:`https://musicbrainz.org/ws/2/artist`,
+                    method:"GET",
+                    params:{
+                        query:`recording:${element}`,
+                        fmt:"json"
+                    }
+                })
+            });
+        })
     } catch (error) {
         return error;
     }
