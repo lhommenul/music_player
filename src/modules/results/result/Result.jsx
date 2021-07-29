@@ -1,33 +1,16 @@
 import { EventEmitter} from "../../event/index"
 import { React,useEffect } from 'react';
-import { reqTitle } from "../../request/req";
 import "./css/style.css"
 
 
 const Result = ({index,data,type}) => {
+    console.log(data);
     let _id = 89654;
     useEffect(() => {
         document.getElementsByClassName('btn_res')[index].addEventListener('click',e=>{
             EventEmitter.dispatch('clickButtonResult',e)
         })
-        requestMissingData(type)
     }, []);
-    function requestMissingData(data_type) {
-        switch (data_type) {
-            case 'artist':
-                console.log('REQUEST');
-                setTimeout(()=>{
-                    reqTitle(data.name).then(res=>{
-                        console.log(res);
-                    })
-                },Math.random()*10)
-                break;
-        
-            default:
-                console.error(`undefined data => ${data_type}`);
-                break;
-        }
-    }
     return (
         <li className="result">
             <span>{index}</span>

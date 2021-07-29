@@ -1,5 +1,5 @@
 import React from 'react'
-import {reqFromApi}from "../request/req"
+import {reqArtist,reqTitle,reqAlbum}from "../request/req"
 import "./css/style.css"
 import {useEffect} from "react"
 import {EventEmitter} from "../event/index"
@@ -8,16 +8,26 @@ const SearchBar = () => {
     useEffect(() => {
         document.querySelector("#form_search").addEventListener("submit",e=>{
             let search_inp = e.target["search_inp"].value;
-            let select_opt = e.target["select_opt"].value;
+            let search_opt = e.target["select_opt"].value;
             e.preventDefault()
-            reqFromApi(select_opt,search_inp)
-            .then(data=>{
-                let normalized_data = {
-                    data:data.data.artists,
-                    type:select_opt
-                }
-                EventEmitter.dispatch('getResultsFromApi',normalized_data)
-            })  
+            reqAlbum({search_inp}).then(data=>{
+                const recordings = data.data.recordings;
+                let list_records_to_show = []
+                recordings.forEach(e=>{
+                    let record = {
+                        name:e['artist-credit'][0].name,
+                        title:e.title,
+                        album:e.releases[0].title
+                    }
+                    list_records_to_show.push(record)
+                })
+                EventEmitter.dispatch('getResultsFromTitle',data.data.recordings)  
+            })
+            // reqTitle({search_inp,search_opt}).then(data=>{    
+            // })
+            // reqArtist({search_inp,search_opt}).then(data=>{    
+            //     EventEmitter.dispatch('getResultsFromApi',data)  
+            // })
         })
         return () => {
             
@@ -33,10 +43,10 @@ const SearchBar = () => {
                 </label>
                 {/* SELECT */}
                 <select name="select_opt" id="">
+                    <option value="series">title</option>
                     <option value="artist">artist</option>
                     <option value="release">album</option>
                     <option value="url">everything</option>
-                    <option value="series">title</option>
                 </select>
                 <button type="submit">Search</button>                
             </form>

@@ -7,59 +7,49 @@ let obj = {
     data:[]
 }
 
-let reqArtist = (query)=>{
+let reqArtist = ({artist_name})=>{
     try {
         return axios({
             url:`https://musicbrainz.org/ws/2/artist`,
             method:"GET",
-            mode:'no-cors',
             params:{
-                query:`artist:${query}`,
-                fmt:"json"
+                query:`artist:${encodeURI(artist_name)}`,
+                fmt:"json",
+                limit:'10',
+                offset:'0',
             }
+        })
+        .then(data=>{
+            return data.data.artists;
         })
     } catch (error) {
         return error;
     }
 }
-let reqAlbum = async (query)=>{
+let reqAlbum = async ({search_inp})=>{
     try {
         return await axios({
-            url:`https://musicbrainz.org/ws/2/release`,
+            url:`https://musicbrainz.org/ws/2/recording/`,
             method:"GET",
             params:{
-                query:`title:${query}`,
+                query:`release:${encodeURI(search_inp)}`,
                 fmt:"json"
             }
-        })
-        .then(res=>{
-            console.log(res.data.releases[0]);
-            return {
-                artist_name:res.data.releases[0]["artist-credit"][0].name,
-                music_title:undefined,
-                album_title:undefined,
-            }
-        })
-        .catch(err=>{
-            return err;
         })
     } catch (error) {
         return error;
     }
 }
-let reqTitle = (query)=>{
+let reqTitle = ({search_inp})=>{
     try {
         return axios({
             url:`https://musicbrainz.org/ws/2/recording`,
             method:"GET",
-            mode:'no-cors',
             params:{
-                query:`recording:${encodeURIComponent(query)}`,
+                query:`recording:${encodeURI(search_inp)}`,
+                limit:10,
                 fmt:"json",
-            },
-        })
-        .catch(err=>{
-            return err;
+            }
         })
     } catch (error) {
         return error;

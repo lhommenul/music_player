@@ -1,13 +1,29 @@
 import {React,useState,useEffect} from 'react'
 import Result from './result/Result'
+import axios from "axios"
 import {EventEmitter} from "../event/index"
+import { reqTitle } from "../request/req";
 const Results = (props) => {
     const [list_res, setstate] = useState([]);
     useEffect(() => {
-        EventEmitter.subscribe("getResultsFromApi",(response)=>{
-            setstate(response);
+        EventEmitter.subscribe("getResultsFromTitle",async (response)=>{
+            console.log(response);
+            let list_data = [];
+            for (let index = 0; index < response.length; index++) {
+                const title = response[index];
+            }
         })
     }, [])
+    function requestMissingData(data_type,data) {
+        switch (data_type) {
+            case 'artist':
+                console.log('REQUEST');
+                    return reqTitle(data.name)
+            default:
+                console.error(`undefined data => ${data_type}`);
+                break;
+        }
+    }
     return (
         <section>
             {/* MESSAGE */}
@@ -24,8 +40,8 @@ const Results = (props) => {
             </div>
             {/* LIST ALL RESULTS */}
             <ul className="list_res">
-                {list_res?.data?.map((e,i)=>{
-                    return <Result key={i} data={e} type={list_res?.type} index={i}></Result>
+                {list_res?.map((e,i)=>{
+                        return <Result key={i} data={e} index={i}></Result>
                 })}
             </ul>
             {/* SPINNER LOADER */}
