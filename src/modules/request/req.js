@@ -7,20 +7,18 @@ let obj = {
     data:[]
 }
 
-let reqArtist = ({artist_name})=>{
+let reqArtist = ({search_inp})=>{
     try {
         return axios({
             url:`https://musicbrainz.org/ws/2/artist`,
             method:"GET",
             params:{
-                query:`artist:${encodeURI(artist_name)}`,
+                query:`${encodeURI(search_inp)}`,
+                inc:`recordings+releases+release-groups+works+media`,
                 fmt:"json",
                 limit:'10',
                 offset:'0',
             }
-        })
-        .then(data=>{
-            return data.data.artists;
         })
     } catch (error) {
         return error;
@@ -33,7 +31,9 @@ let reqAlbum = async ({search_inp})=>{
             method:"GET",
             params:{
                 query:`release:${encodeURI(search_inp)}`,
-                fmt:"json"
+                fmt:"json",
+                limit:'10',
+                offset:'0',
             }
         })
     } catch (error) {
@@ -46,9 +46,11 @@ let reqTitle = ({search_inp})=>{
             url:`https://musicbrainz.org/ws/2/recording`,
             method:"GET",
             params:{
-                query:`recording:${encodeURI(search_inp)}`,
-                limit:10,
+                query:`${encodeURI(search_inp)}`,
+                inc:`artists+releases+isrcs+url-rels`,
                 fmt:"json",
+                limit:'10',
+                offset:'0',
             }
         })
     } catch (error) {

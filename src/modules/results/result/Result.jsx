@@ -15,8 +15,8 @@ const Result = ({index,data,type}) => {
         <li className="result">
             <span>{index}</span>
             <p>{data.name}</p>
-            <p>Title</p>
-            <p>Album</p>
+            <p>{data.title}</p>
+            <p>{data.album}</p>
             <button className="btn_res" data-id={_id} >+</button>
         </li>
     )

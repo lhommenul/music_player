@@ -7,11 +7,19 @@ const Results = (props) => {
     const [list_res, setstate] = useState([]);
     useEffect(() => {
         EventEmitter.subscribe("getResultsFromTitle",async (response)=>{
-            console.log(response);
-            let list_data = [];
-            for (let index = 0; index < response.length; index++) {
-                const title = response[index];
-            }
+            // GET THE TITLE => .title
+            // GET THE ARTIST => .artist-credit[].artist.name
+            // GET THE ALBUM => .releases[].title
+            const total_responses = response.data.count;
+            let list_recordings = response.data.recordings;
+            list_recordings = list_recordings.map(res_title=>{
+               return {
+                title : res_title?.title,
+                name : res_title['artist-credit'][0]?.artist?.name,
+                album : res_title?.releases[0]?.title,
+               }
+            })
+            setstate(list_recordings)
         })
     }, [])
     function requestMissingData(data_type,data) {

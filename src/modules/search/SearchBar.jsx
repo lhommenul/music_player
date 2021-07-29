@@ -5,23 +5,20 @@ import {useEffect} from "react"
 import {EventEmitter} from "../event/index"
 
 const SearchBar = () => {
+    let offset = 0;
+    let limit = 10;
+    window.addEventListener('scroll',e=>{
+        // e.target.body.offsetHeight
+        console.log(e);
+    })
     useEffect(() => {
         document.querySelector("#form_search").addEventListener("submit",e=>{
             let search_inp = e.target["search_inp"].value;
             let search_opt = e.target["select_opt"].value;
             e.preventDefault()
-            reqAlbum({search_inp}).then(data=>{
-                const recordings = data.data.recordings;
-                let list_records_to_show = []
-                recordings.forEach(e=>{
-                    let record = {
-                        name:e['artist-credit'][0].name,
-                        title:e.title,
-                        album:e.releases[0].title
-                    }
-                    list_records_to_show.push(record)
-                })
-                EventEmitter.dispatch('getResultsFromTitle',data.data.recordings)  
+            reqTitle({search_inp}).then(response=>{
+                EventEmitter.dispatch('getResultsFromTitle',response)  
+                offset = response.data.length;
             })
             // reqTitle({search_inp,search_opt}).then(data=>{    
             // })
