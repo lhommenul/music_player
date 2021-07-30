@@ -40,7 +40,8 @@ let reqAlbum = async ({search_inp})=>{
         return error;
     }
 }
-let reqTitle = ({search_inp})=>{
+let reqTitle = ({search_inp,offset,limit})=>{
+    console.log(offset,limit);
     try {
         return axios({
             url:`https://musicbrainz.org/ws/2/recording`,
@@ -49,31 +50,15 @@ let reqTitle = ({search_inp})=>{
                 query:`${encodeURI(search_inp)}`,
                 inc:`artists+releases+isrcs+url-rels`,
                 fmt:"json",
-                limit:'10',
-                offset:'0',
+                limit:limit,
+                offset:offset,
             }
         })
     } catch (error) {
         return error;
     }
 }
-let reqFromApi = (type,query)=>{
-    switch (type) {
-        case "artist" || "artists":
-            return reqArtist(query)
-        case "release" || "releases":
-            return reqAlbum(query)
-        case "recording" || "recordings":
-            return reqTitle(query)
-        case "everything":
-    
-            break;            
-        default:
-            break;
-    }
-}
 export {
-    reqFromApi,
     reqArtist,
     reqAlbum,
     reqTitle,
