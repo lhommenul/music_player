@@ -7,33 +7,34 @@ let obj = {
     data:[]
 }
 
-let reqArtist = ({search_inp})=>{
+let reqArtist = ({search_inp,offset,limit})=>{
     try {
         return axios({
-            url:`https://musicbrainz.org/ws/2/artist`,
+            url:`https://musicbrainz.org/ws/2/recording`,
             method:"GET",
             params:{
-                query:`${encodeURI(search_inp)}`,
+                query:`artist:${encodeURI(search_inp)}`,
                 inc:`recordings+releases+release-groups+works+media`,
                 fmt:"json",
-                limit:'10',
-                offset:'0',
+                limit:limit,
+                offset:offset,
             }
         })
     } catch (error) {
         return error;
     }
 }
-let reqAlbum = async ({search_inp})=>{
+let reqAlbum = async ({search_inp,offset,limit})=>{
     try {
+        console.log(offset);
         return await axios({
             url:`https://musicbrainz.org/ws/2/recording/`,
             method:"GET",
             params:{
                 query:`release:${encodeURI(search_inp)}`,
                 fmt:"json",
-                limit:'10',
-                offset:'0',
+                limit:limit,
+                offset:offset,
             }
         })
     } catch (error) {

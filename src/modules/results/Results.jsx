@@ -1,21 +1,22 @@
+import './css/index.css'
 import {React,useState,useEffect} from 'react'
 import Result from './result/Result'
-import {EventEmitter} from "../event/index"
+import {EventEmitter, setTotalResponse,spinnerDisplay} from "../event/index"
 const Results = () => {
     const [list, setstate] = useState([]);
-    // 0 =  title, 1 = artist, album = 2
     useEffect(() => {
         EventEmitter.subscribe('setData',(i)=>{
-            console.log(i);
             setstate(list.concat(i))
-            console.log(list);
+            spinnerDisplay(false)
         })
     }, [])
     return (
         <section>
             {/* MESSAGE */}
             <div>
-                <h1>Aucun resultats</h1>
+                <div>
+                    <h2 id="message_for_the_user">Aucun Resultats</h2>
+                </div>
                 {/* HEADER */}
                 <div className="result">
                     <span>line number</span>
@@ -34,7 +35,7 @@ const Results = () => {
             </ul>
             {/* SPINNER LOADER */}
             <div>
-                <img src="../../../téléchargement.gif" alt="spinner" />
+                <img id="spin" src="../../../téléchargement.gif" alt="spinner" />
             </div>
         </section>
     )
