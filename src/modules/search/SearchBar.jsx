@@ -6,7 +6,7 @@ import {EventEmitter,setTotalResponse,spinnerDisplay} from "../event/index"
 
 const SearchBar = () => {
     // 0 =  title, 1 = artist, album = 2, everything = 3
-    let type_data_requested,limit = 50,offset= 0,loaded = false,search, list_res = [];
+    let type_data_requested,limit = 50,offset= 0,loaded = false,search,total=0, list_res = [];
     useEffect(() => {
         document.querySelector("#form_search").addEventListener("submit",e=>{
             offset = 0;
@@ -20,6 +20,7 @@ const SearchBar = () => {
                     // REQUEST FOR A TITLE
                     reqTitle({search_inp,offset,limit}).then(response=>{
                         setTotalResponse(response.data.count)
+                        total = response.data.count;
                         search = search_inp;
                         type_data_requested = 0;
                         normalizeData(response)
@@ -30,6 +31,7 @@ const SearchBar = () => {
                     // REQUEST FOR AN ARTIST
                     reqArtist({search_inp,offset,limit}).then(response=>{
                         setTotalResponse(response.data.count)
+                        total = response.data.count;
                         search = search_inp;
                         type_data_requested = 1;
                         normalizeData(response)
@@ -39,6 +41,8 @@ const SearchBar = () => {
                     console.log('album');
                     // REQUEST FOR AN ALBUM
                     reqAlbum({search_inp,offset,limit}).then(response=>{
+                        console.log(response.data.count);
+                        total = response.data.count;
                         setTotalResponse(response.data.count)
                         search = search_inp;
                         type_data_requested = 2;
@@ -80,58 +84,62 @@ const SearchBar = () => {
                 break;                                                               
             case 3:
                 for (let index = 0; index < response.length; index++) {
-                    const element = response[index];
-                    nomalize(element)   
+                    nomalize(response[index])   
                 }
                 break;
         }
         function nomalize(response) {
             response.data.recordings.forEach(res_title=>{
-                try {
-                    list_res.push({
-                        // GET THE TITLE => .title
-                        title : res_title?.title,
-                        // GET THE ARTIST => .artist-credit[].artist.name
-                        name : res_title['artist-credit'][0]?.artist?.name,
-                        // GET THE ALBUM => .releases[].title
-                        album : res_title?.releases[0]?.title,
-                        // release id
-                        release:res_title?.releases,
-                        // data en vrac
-                        data:res_title
-                    })
-                } catch (error) {
-                    console.error(error);
-                }
+                list_res.push({
+                    // GET THE TITLE => .title
+                    title : res_title?.title??"unknow title",
+                    // GET THE ARTIST => .artist-credit[].artist.name
+                    name : res_title['artist-credit'][0]?.artist?.name??"unknow name",
+                    // GET THE ALBUM => .releases[].title
+                    album : res_title?.releases[0]?.title??"unknow title",
+                    // release id
+                    release:res_title?.releases,
+                    // data en vrac
+                    data:res_title
+                })
             }) 
         }
-        offset += limit;
         loaded = true;
         EventEmitter.dispatch('setData',list_res)
     }
     // LOAD DATA WHEN ON THE BOTTOM OF THE PAGE
-    window.addEventListener("scroll",function(ev) {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && loaded) {
+    window.addEventListener("scroll",function() {
+        console.log('=== load ===');
+        console.log(offset);
+        console.log(total);
+        console.log(loaded);
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && loaded && offset-limit!=total) {
+            console.log(offset!=total);
+            // SET THE OFFSET
+            if (offset+limit > total) offset=total-limit
+            else offset += limit;
+            console.log('=== load more ===');
             spinnerDisplay(true)
             loaded = false;
             switch (type_data_requested) {
                 case 0:
-                    reqTitle({search,offset,limit})
-                    .then(response=>{ normalizeData(response,search) })
+                    reqTitle({search,offset,limit,total})
+                    .then(response=>{ normalizeData(response) })
                     .catch(err=>{
                         console.error(err);
                     })
                     break;
                 case 1:
-                    reqArtist({search,offset,limit})
-                    .then(response=>{ normalizeData(response,search) })
+                    reqArtist({search,offset,limit,total})
+                    .then(response=>{ normalizeData(response) })
                     .catch(err=>{
                         console.error(err);
                     })
                     break;
                 case 2:
-                    reqAlbum({search,offset,limit})
-                    .then(response=>{ normalizeData(response,search) })
+                    console.log('album '+search);
+                    reqAlbum({search,offset,limit,total})
+                    .then(response=>{ normalizeData(response) })
                     .catch(err=>{
                         console.error(err);
                     })
@@ -142,6 +150,7 @@ const SearchBar = () => {
                     })
                     break;                                                        
                 default:
+                    console.error("== default ==");
                     break;
             }
         }
