@@ -29,7 +29,7 @@ const Results = () => {
             {/* LIST ALL RESULTS */}
             <ul className="list_res">
                 {list.map((e,i)=>{
-                    return <Result key={i} data={e} index={i}></Result>
+                    return <Result key={i} data={e} index={i+1}></Result>
                 })
                 }
             </ul>

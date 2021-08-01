@@ -5,156 +5,108 @@ import {useEffect} from "react"
 import {EventEmitter,setTotalResponse,spinnerDisplay} from "../event/index"
 
 const SearchBar = () => {
-    // 0 =  title, 1 = artist, album = 2, everything = 3
-    let type_data_requested,limit = 50,offset= 0,loaded = false,search,total=0, list_res = [];
+    let type_data_requested,limit = 50,offset= 0,loaded = false,search,total=0, list_res = [],search_inp,search_opt;
     useEffect(() => {
         document.querySelector("#form_search").addEventListener("submit",e=>{
-            offset = 0;
-            e.preventDefault()
-            let search_inp = e.target["search_inp"].value,
-                search_opt = e.target["select_opt"].value;
-            list_res = []
-            spinnerDisplay(true)
-            switch (search_opt) {
-                case '0':
-                    // REQUEST FOR A TITLE
-                    reqTitle({search_inp,offset,limit}).then(response=>{
-                        setTotalResponse(response.data.count)
-                        total = response.data.count;
-                        search = search_inp;
-                        type_data_requested = 0;
-                        normalizeData(response)
-                    })
-                    .catch(err=>{ console.log(err) })
-                    break;
-                case '1':
-                    // REQUEST FOR AN ARTIST
-                    reqArtist({search_inp,offset,limit}).then(response=>{
-                        setTotalResponse(response.data.count)
-                        total = response.data.count;
-                        search = search_inp;
-                        type_data_requested = 1;
-                        normalizeData(response)
-                    })                
-                    break;
-                case '2':
-                    console.log('album');
-                    // REQUEST FOR AN ALBUM
-                    reqAlbum({search_inp,offset,limit}).then(response=>{
-                        console.log(response.data.count);
-                        total = response.data.count;
-                        setTotalResponse(response.data.count)
-                        search = search_inp;
-                        type_data_requested = 2;
-                        normalizeData(response)
-                    })
-                    break;
-                case '3':
-                    Promise.all([reqAlbum({search_inp,offset,limit}),reqArtist({search_inp,offset,limit}),reqTitle({search_inp,offset,limit})]).then(response=>{
-                        setTotalResponse(response.reduce((pv,cv)=>{
-                            return pv = cv.data.count;
-                        }))
-                        search = search_inp;
-                        type_data_requested = 3;
-                        normalizeData(response)
-                    })
-                    .catch(err=>{
-                        console.log('error de merde => '+err);
-                    })
-                    break;                                                                
-                default:
-                    spinnerDisplay(false)
-                    break;
-            }
+            e.preventDefault() 
+            search_inp = e.target["search_inp"].value; // search input result
+            search_opt = e.target["select_opt"].value; // select html element option
+            offset = 0; // reset the offset
+            list_res = [] // list of normalized data from the api
+            requestData(search_opt) // request data from the api
+            spinnerDisplay(true) // display the loading spinner
         })
     }, []);
     function normalizeData(response) {
-        switch (type_data_requested) {
-            case 0:
-                // ARTIST, TITLE, ALBUM
-                nomalize(response)                
-                break;                           
-            case 1:
-                // ARTIST, TITLE, ALBUM
-                nomalize(response)                
-                break;                           
-            case 2:
-                // ARTIST, TITLE, ALBUM
-                nomalize(response)                
-                break;                                                               
-            case 3:
-                for (let index = 0; index < response.length; index++) {
-                    nomalize(response[index])   
-                }
-                break;
-        }
+        // executing normalize function on the data from the api
+        if (type_data_requested != 3) nomalize(response)
+        else response.forEach(data=>{ nomalize(data) });
         function nomalize(response) {
+            // create a unified object for the data
             response.data.recordings.forEach(res_title=>{
-                list_res.push({
-                    // GET THE TITLE => .title
-                    title : res_title?.title??"unknow title",
-                    // GET THE ARTIST => .artist-credit[].artist.name
-                    name : res_title['artist-credit'][0]?.artist?.name??"unknow name",
-                    // GET THE ALBUM => .releases[].title
-                    album : res_title?.releases[0]?.title??"unknow title",
-                    // release id
-                    release:res_title?.releases,
-                    // data en vrac
-                    data:res_title
-                })
+                try {
+                    list_res.push({
+                        type_data_requested:type_data_requested,
+                        // GET THE TITLE => .title
+                        title : res_title?.title??"unknow title",
+                        // GET THE ARTIST => .artist-credit[].artist.name
+                        name : res_title['artist-credit'][0]?.artist?.name??"unknow name",
+                        // GET THE ALBUM => .releases[].title
+                        album : res_title?.releases[0]?.title??"unknow title",
+                        // release id
+                        release:res_title?.releases,
+                        // data en vrac
+                        data:res_title
+                    })
+                } catch (error) { console.error(error) }
             }) 
         }
-        loaded = true;
+        loaded = true; // make new request is enabled
         EventEmitter.dispatch('setData',list_res)
     }
     // LOAD DATA WHEN ON THE BOTTOM OF THE PAGE
     window.addEventListener("scroll",function() {
-        console.log('=== load ===');
-        console.log(offset);
-        console.log(total);
-        console.log(loaded);
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && loaded && offset-limit!=total) {
-            console.log(offset!=total);
-            // SET THE OFFSET
-            if (offset+limit > total) offset=total-limit
-            else offset += limit;
-            console.log('=== load more ===');
-            spinnerDisplay(true)
-            loaded = false;
-            switch (type_data_requested) {
-                case 0:
-                    reqTitle({search,offset,limit,total})
-                    .then(response=>{ normalizeData(response) })
-                    .catch(err=>{
-                        console.error(err);
-                    })
-                    break;
-                case 1:
-                    reqArtist({search,offset,limit,total})
-                    .then(response=>{ normalizeData(response) })
-                    .catch(err=>{
-                        console.error(err);
-                    })
-                    break;
-                case 2:
-                    console.log('album '+search);
-                    reqAlbum({search,offset,limit,total})
-                    .then(response=>{ normalizeData(response) })
-                    .catch(err=>{
-                        console.error(err);
-                    })
-                    break;                                    
-                case 3:
-                    Promise.all([reqAlbum({search,offset,limit}),reqArtist({search,offset,limit}),reqTitle({search,offset,limit})]).then(response=>{
-                        normalizeData(response,search)
-                    })
-                    break;                                                        
-                default:
-                    console.error("== default ==");
-                    break;
-            }
+            offset+=limit; // increase offset 
+            requestData() // requesting new data from the api
+            spinnerDisplay(true) // display the loading spinner
+            loaded = false; // during the request disabled the possibility to request more data from the api        
         }
     })
+    function requestData() {
+        // 0 = title / 1 = artist / 2 = album / 3 = everything / other = undefined 
+        switch (search_opt) {
+            case '0':
+                // REQUEST FOR A TITLE
+                reqTitle({search_inp,offset,limit}).then(response=>{
+                    setTotalResponse(response.data.count)
+                    total = response.data.count;
+                    search = search_inp;
+                    type_data_requested = 0;
+                    normalizeData(response)
+                })
+                .catch(err=>{ console.log(err) })
+                break;
+            case '1':
+                // REQUEST FOR AN ARTIST
+                reqArtist({search_inp,offset,limit}).then(response=>{
+                    setTotalResponse(response.data.count)
+                    total = response.data.count;
+                    search = search_inp;
+                    type_data_requested = 1;
+                    normalizeData(response)
+                })                
+                break;
+            case '2':
+                console.log('album');
+                // REQUEST FOR AN ALBUM
+                reqAlbum({search_inp,offset,limit}).then(response=>{
+                    console.log(response.data.count);
+                    total = response.data.count;
+                    setTotalResponse(response.data.count)
+                    search = search_inp;
+                    type_data_requested = 2;
+                    normalizeData(response)
+                })
+                break;
+            case '3':
+                Promise.all([reqAlbum({search_inp,offset,limit}),reqArtist({search_inp,offset,limit}),reqTitle({search_inp,offset,limit})]).then(response=>{
+                    setTotalResponse(response.reduce((pv,cv)=>{
+                        return pv = cv.data.count;
+                    }))
+                    search = search_inp;
+                    type_data_requested = 3;
+                    normalizeData(response)
+                })
+                .catch(err=>{
+                    console.log('error de merde => '+err);
+                })
+                break;                                                                
+            default:
+                spinnerDisplay(false)
+                break;
+        }
+    }
     return (
         <header>
             <form action="" id="form_search">

@@ -4,19 +4,19 @@ import "./css/style.css"
 
 
 const Result = ({index,data}) => {
-    let _id = 89654;
     useEffect(() => {
-        document.getElementsByClassName('btn_res')[index].addEventListener('click',e=>{
-            EventEmitter.dispatch('clickButtonResult',data)
-        })
+        // EventEmitter.dispatch('displayModal',true)
     }, []);
+    function displayTheModal() {
+        EventEmitter.dispatch('displayModal',data)
+    }
     return (
         <li className="result">
             <span>{index}</span>
             <p>{data.name}</p>
             <p>{data.title}</p>
             <p>{data.album}</p>
-            <button className="btn_res" data-id={_id} >+</button>
+            <button className="btn_res" onClick={displayTheModal}>+</button>
         </li>
     )
 }
