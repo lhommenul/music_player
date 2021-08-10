@@ -2,7 +2,7 @@ import React from 'react'
 import "./css/style.css";
 import { EventEmitter} from "../../event/index"
 import { useEffect,useState } from 'react';
-import { reqArtistById,reqAlbumById,reqTitleById} from '../../request/req'
+import { reqArtistById,reqAlbumById,reqTitleById,reqCoverReleaseById} from '../../request/req'
 
 const Modal = () => {
     let modal_is_open = false;
@@ -28,6 +28,12 @@ const Modal = () => {
                 .then(data=>{
                     console.log(data.data);
                     setMoreInfo({...more_info,...data.data})
+                    more_info?.releases?.forEach(res=>{
+                        reqCoverReleaseById(res.id)
+                        .then(data=>{
+                            console.log(data);
+                        })
+                    })
                 })
                 .catch(err=>{
                     console.error(err);
@@ -52,7 +58,7 @@ const Modal = () => {
                 })
                 break;        
             case 3:
-            
+                console.error("everything is not implemented yet");
                 break;                
             default:
                 break;
@@ -78,6 +84,9 @@ const Modal = () => {
                 })}
                 {/* release date */}
                 {   <h4>{more_info["first-release-date"]}</h4>  }
+                {more_info["relations"]?.map((relation,index)=>{
+                    return <h3 key={index}>{relation?.title}</h3>
+                })}
                 {more_info["releases"]?.map((release,index)=>{
                     return <h3 key={index}>{release?.title}</h3>
                 })}

@@ -95,11 +95,25 @@ let reqTitleById = (id)=>{
         return error;
     }
 }
+
+let reqCoverReleaseById = (id)=>{
+    // ex : https://coverartarchive.org/release/99b09d02-9cc9-3fed-8431-f162165a9371
+    try {
+        return axios({
+            url:`https://coverartarchive.org/release/${encodeURI(id)}`,
+            method:"GET",
+        })
+    } catch (error) {
+        return error;
+    }
+}
+
 export {
     reqArtist,
     reqAlbum,
     reqTitle,
     reqArtistById,
     reqAlbumById,
-    reqTitleById
+    reqTitleById,
+    reqCoverReleaseById
 }
