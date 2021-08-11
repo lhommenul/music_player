@@ -11,6 +11,7 @@ const Modal = () => {
     const [modal_data, setModalData] = useState({});
     EventEmitter.subscribe('displayModal',(modal_props_data)=>{
         modal_is_open = !modal_is_open;
+        setCoverArt([])
         setModalData({ ...modal_data, ...modal_props_data })
         setModalState()
     });
@@ -23,6 +24,7 @@ const Modal = () => {
         })
     }, []);
     useEffect(() => {
+        console.log(cover_art);
         switch (modal_data.type_data_requested) {
             case 0:
                 reqTitleById(modal_data.data.id)
@@ -69,7 +71,8 @@ const Modal = () => {
             data?.releases?.forEach(res=>{
                 reqCoverReleaseById(res.id)
                 .then(response=>{
-                    setCoverArt(cover_art.concat(response?.data?.images))
+                    console.log(response?.data?.images);
+                    setCoverArt(cover_art.concat(response.data.images))
                 })
                 .catch(err=>{
                     console.log(err);
@@ -106,8 +109,9 @@ const Modal = () => {
                 })}
                 <h2>Cover Arts</h2>
                 {
-                    cover_art?.map(img=>{
-                        <img src={img.image} alt="pas d'image" />
+                    cover_art?.map((img,index)=>{
+                        console.log(img);
+                        return <img className="img_modal_cover_art" key={index+Math.random()} src={img.image} alt="pas d'image" />
                     })
                 }
             </div>

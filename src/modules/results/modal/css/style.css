@@ -30,6 +30,10 @@
         border-radius: 3em 3em 0 0;
         background-color: whitesmoke;
         box-shadow: 2px 2xp 6px grey;
+        overflow-y:scroll;
         display: flex;
         flex-direction: column;
+    }
+    .img_modal_cover_art{
+        max-width: 30%;
     }
