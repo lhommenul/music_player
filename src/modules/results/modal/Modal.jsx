@@ -95,25 +95,45 @@ const Modal = () => {
             <div className="modal_content">
                 <h1>{modal_data.title}</h1>
                 <h2>Informations</h2>
-                {/* dispay all artist credit */}
-                {more_info["artist-credit"]?.map((artist_credit,index)=>{
-                    return <h3 key={index}>{artist_credit?.name}</h3>
-                })}
-                {/* release date */}
-                {   <h4>{more_info["first-release-date"]}</h4>  }
-                {more_info["relations"]?.map((relation,index)=>{
-                    return <h3 key={index}>{relation?.title}</h3>
-                })}
-                {more_info["releases"]?.map((release,index)=>{
-                    return <h3 key={index}>{release?.title}</h3>
-                })}
+                <ul>
+                    <li>
+                        {/* dispay all artist credit */}
+                        <h3>artist credit</h3>
+                        <ul>
+                            {more_info["artist-credit"]?.map((artist_credit,index)=>{
+                                return <li key={index}>{artist_credit?.name}</li>
+                            })}
+                        </ul>
+                    </li>
+                    <li>
+                        <h3>release date</h3>
+                        {   <h4>{more_info["first-release-date"]}</h4>  }
+                    </li>
+                    <li>
+                        <h3>relations</h3>
+                        <ul>
+                            {more_info["relations"]?.map((relation,index)=>{
+                                return <li key={index}>{relation?.title}</li>
+                            })}
+                        </ul>
+                    </li>
+                    <li>
+                        <h3>releases</h3>
+                        <ul>
+                            {more_info["releases"]?.map((release,index)=>{
+                                return <li key={index}>{release?.title}</li>
+                            })}
+                        </ul>
+                    </li>
+                </ul>
                 <h2>Cover Arts</h2>
-                {
-                    cover_art?.map((img,index)=>{
-                        console.log(img);
-                        return <img className="img_modal_cover_art" key={index+Math.random()} src={img.image} alt="pas d'image" />
-                    })
-                }
+                <ul>
+                    {
+                        cover_art?.map((img,index)=>{
+                            return <li><img className="img_modal_cover_art" key={index+Math.random()} src={img.image} alt="pas d'image" /></li>
+                        })
+                    }
+                </ul>
             </div>
         </div>
     )
