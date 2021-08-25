@@ -7,6 +7,17 @@ import {EventEmitter,setTotalResponse,spinnerDisplay} from "../event/index"
 const SearchBar = () => {
     let type_data_requested,limit = 50,offset= 0,loaded = false,search,total=0, list_res = [],search_inp,search_opt;
     useEffect(() => {
+        document.querySelector("#input_res_user").addEventListener('keypress',e=>{
+            if (e.key === "Enter") {
+                e.preventDefault() 
+                search_inp = document.querySelector("#input_res_user").value; // search input result
+                search_opt = document.querySelector("#select_option_user").value; // select html element option
+                offset = 0; // reset the offset
+                list_res = [] // list of normalized data from the api
+                requestData(search_opt) // request data from the api
+                spinnerDisplay(true) // display the loading spinner            
+            }
+        })
         document.querySelector("#form_search").addEventListener("submit",e=>{
             e.preventDefault() 
             search_inp = e.target["search_inp"].value; // search input result
@@ -113,10 +124,10 @@ const SearchBar = () => {
                 {/* INPUT SEARCH BAR */}
                 <label htmlFor="">
                     Rechercher
-                    <input required type="text" name="search_inp" placeholder="album/title/..." />
+                    <input required type="text" name="search_inp" id="input_res_user" placeholder="album/title/..." />
                 </label>
                 {/* SELECT */}
-                <select name="select_opt" id="">
+                <select name="select_opt" id="select_option_user">
                     <option value="0">title</option>
                     <option value="1">artist</option>
                     <option value="2">album</option>

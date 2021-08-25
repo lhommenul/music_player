@@ -6,7 +6,7 @@ let reqArtist = ({search_inp,offset,limit})=>{
             url:`https://musicbrainz.org/ws/2/recording`,
             method:"GET",
             params:{
-                query:`artist:${encodeURI(search_inp)}`,
+                query:`artist:"${search_inp}"`,
                 inc:`recordings+releases+release-groups+works+media`,
                 fmt:"json",
                 limit:limit,
@@ -24,7 +24,7 @@ let reqAlbum = async ({search_inp,offset,limit})=>{
             url:`https://musicbrainz.org/ws/2/recording/`,
             method:"GET",
             params:{
-                query:`release:${encodeURI(search_inp)}`,
+                query:`release:"${search_inp}"`,
                 fmt:"json",
                 limit:limit,
                 offset:offset,
@@ -40,7 +40,7 @@ let reqTitle = ({search_inp,offset,limit})=>{
             url:`https://musicbrainz.org/ws/2/recording`,
             method:"GET",
             params:{
-                query:`${encodeURI(search_inp)}`,
+                query:`recording:"${search_inp}"`,
                 inc:`artists+releases+isrcs+url-rels`,
                 fmt:"json",
                 limit:limit,
