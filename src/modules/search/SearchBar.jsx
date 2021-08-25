@@ -92,7 +92,6 @@ const SearchBar = () => {
                 console.log('album');
                 // REQUEST FOR AN ALBUM
                 reqAlbum({search_inp,offset,limit}).then(response=>{
-                    console.log(response.data.count);
                     total = response.data.count;
                     setTotalResponse(response.data.count)
                     search = search_inp;
@@ -102,9 +101,8 @@ const SearchBar = () => {
                 break;
             case '3':
                 Promise.all([reqAlbum({search_inp,offset,limit}),reqArtist({search_inp,offset,limit}),reqTitle({search_inp,offset,limit})]).then(response=>{
-                    setTotalResponse(response.reduce((pv,cv)=>{
-                        return pv = cv.data.count;
-                    }))
+                    let total_responses = response.reduce((accumulator,cv)=>accumulator + cv.data.count,0)
+                    setTotalResponse(total_responses)
                     search = search_inp;
                     type_data_requested = 3;
                     normalizeData(response)

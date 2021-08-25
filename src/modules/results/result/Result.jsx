@@ -16,7 +16,7 @@ const Result = ({index,data}) => {
             <p>{data.name}</p>
             <p>{data.title}</p>
             <p>{data.album}</p>
-            <button className="btn_res" onClick={displayTheModal}>+</button>
+            <button className="btn_res" onClick={displayTheModal} >+</button>
         </li>
     )
 }

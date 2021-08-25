@@ -90,7 +90,7 @@ const Modal = () => {
         }
     }
     return (
-        <div id="modal_window">
+        <div id="modal_window" tabIndex="1" aria-modal="true">
             <button className="modal_btn">x</button>
             <div className="modal_content">
                 <h1>{modal_data.title}</h1>
@@ -101,7 +101,7 @@ const Modal = () => {
                         <h3>artist credit</h3>
                         <ul>
                             {more_info["artist-credit"]?.map((artist_credit,index)=>{
-                                return <li key={index}>{artist_credit?.name}</li>
+                                return <li key={index+Math.random()}>{artist_credit?.name}</li>
                             })}
                         </ul>
                     </li>
@@ -113,7 +113,7 @@ const Modal = () => {
                         <h3>relations</h3>
                         <ul>
                             {more_info["relations"]?.map((relation,index)=>{
-                                return <li key={index}>{relation?.title}</li>
+                                return <li key={index+Math.random()}>{relation?.title}</li>
                             })}
                         </ul>
                     </li>
@@ -121,7 +121,7 @@ const Modal = () => {
                         <h3>releases</h3>
                         <ul>
                             {more_info["releases"]?.map((release,index)=>{
-                                return <li key={index}>{release?.title}</li>
+                                return <li key={index+Math.random()}>{release?.title}</li>
                             })}
                         </ul>
                     </li>

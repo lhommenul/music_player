@@ -1,4 +1,4 @@
-import './css/index.css'
+import './css/style.css'
 import {React,useState,useEffect} from 'react'
 import Result from './result/Result'
 import {EventEmitter, setTotalResponse,spinnerDisplay} from "../event/index"
