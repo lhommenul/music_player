@@ -88,7 +88,7 @@ let reqTitleById = (id)=>{
             method:"GET",
             params:{
                 fmt:"json",
-                inc:`artists+releases+isrcs+url-rels`,
+                inc:`artists+releases+ratings+isrcs+url-rels`,
             }
         })
     } catch (error) {

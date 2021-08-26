@@ -24,7 +24,6 @@ const Modal = () => {
         })
     }, []);
     useEffect(() => {
-        console.log(cover_art);
         switch (modal_data.type_data_requested) {
             case 0:
                 reqTitleById(modal_data.data.id)
@@ -72,7 +71,11 @@ const Modal = () => {
                 reqCoverReleaseById(res.id)
                 .then(response=>{
                     console.log(response?.data?.images);
-                    setCoverArt(cover_art.concat(response.data.images))
+                    let cover_links = response?.data?.images.map(e=>{
+                        return e.thumbnails.small;
+                    })
+                    // console.log(response);
+                    setCoverArt(cover_art.concat(cover_links));
                 })
                 .catch(err=>{
                     console.log(err);
@@ -93,11 +96,12 @@ const Modal = () => {
         <div id="modal_window" tabIndex="1" aria-modal="true">
             <button className="modal_btn">x</button>
             <div className="modal_content">
+                {/* TITRE */}
                 <h1>{modal_data.title}</h1>
                 <h2>Informations</h2>
                 <ul>
                     <li>
-                        {/* dispay all artist credit */}
+                        {/* ARTISTS */}
                         <h3>artist credit</h3>
                         <ul>
                             {more_info["artist-credit"]?.map((artist_credit,index)=>{
@@ -106,6 +110,7 @@ const Modal = () => {
                         </ul>
                     </li>
                     <li>
+                        {/* DATE */}
                         <h3>release date</h3>
                         {   <h4>{more_info["first-release-date"]}</h4>  }
                     </li>
@@ -130,7 +135,7 @@ const Modal = () => {
                 <ul>
                     {
                         cover_art?.map((img,index)=>{
-                            return <li><img className="img_modal_cover_art" key={index+Math.random()} src={img.image} alt="pas d'image" /></li>
+                            return <li><img className="img_modal_cover_art" key={index+Math.random()} src={img} alt="pas d'image" /></li>
                         })
                     }
                 </ul>
