@@ -60,7 +60,7 @@ let reqArtistById = (id)=>{
             method:"GET",
             params:{
                 fmt:"json",
-                inc:`artists+releases+isrcs+url-rels`,
+                inc:`artists+releases+ratings`,
             }
         })
     } catch (error) {
@@ -74,7 +74,7 @@ let reqAlbumById = async (id)=>{
             method:"GET",
             params:{
                 fmt:"json",
-                inc:`artists+releases+isrcs+url-rels`,
+                inc:`artists+releases+ratings`,
             }
         })
     } catch (error) {
@@ -88,7 +88,7 @@ let reqTitleById = (id)=>{
             method:"GET",
             params:{
                 fmt:"json",
-                inc:`artists+releases+ratings+isrcs+url-rels`,
+                inc:`artists+releases+ratings`,
             }
         })
     } catch (error) {

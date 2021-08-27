@@ -5,6 +5,7 @@ const Images = (props) => {
     const [list_images, setListImages] = useState([])
     useEffect(() => {
         if (props.images) {
+            console.log(props.images);
             requestCoverImages(props.images)
         }else{ // waiting for data
             setListImages(list_images=>[])
