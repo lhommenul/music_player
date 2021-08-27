@@ -2,19 +2,17 @@ import {React,useEffect,useState} from 'react'
 const Artists = (props) => {
     const [artists, setArtists] = useState([])
     useEffect(() => {
-        console.log(props);
-        if (props.artists) {
-            console.log(props.artists);
+        if (props.artists['artist-credit']) {
+            setArtists(artists=>artists.concat(props.artists['artist-credit']))
             // setArtists(artists => artists.concat(props.artists))
         }
     }, []);
     return (
         <ul>
-            <li>yes</li>
-            {/* {artists.map(artist_info=>{
-                console.log(artist_info);
-                return <h2>{artist_info?.artist}</h2>;
-            })} */}
+            <li>artists</li>
+            {artists.map((artist_info,index)=>{
+                return <li key={'artist_name_'+index}>{artist_info?.artist?.name}</li>;
+            })}
         </ul>
     )
 }

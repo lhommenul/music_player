@@ -33,6 +33,7 @@ const SearchBar = () => {
         if (type_data_requested != 3) nomalize(response)
         else response.forEach(data=>{ nomalize(data) });
         function nomalize(response) {
+            console.log("reauesed");
             // create a unified object for the data
             response.data.recordings.forEach(res_title=>{
                 try {
@@ -58,6 +59,7 @@ const SearchBar = () => {
     // LOAD DATA WHEN ON THE BOTTOM OF THE PAGE
     window.addEventListener("scroll",function() {
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && loaded && offset-limit!=total) {
+            console.log("refresh");
             offset+=limit; // increase offset 
             requestData() // requesting new data from the api
             spinnerDisplay(true) // display the loading spinner

@@ -9,6 +9,7 @@ import Artists from "./informations/Artists"
 const Modal = () => {
     let modal_is_open = false;
     const [modal_data, setModalData] = useState({});
+    const [data_is_loaded, setDataIsLoaded] = useState(false)
     EventEmitter.subscribe('displayModal',(modal_props_data)=>{
         setModalState() // display or dont display the modal
         setModalData({ ...modal_data, ...modal_props_data }) // set data for the modal
@@ -17,12 +18,11 @@ const Modal = () => {
         })
     });
     useEffect(() => {
-        // console.log(modal_data);
         if (Object.keys(modal_data).length !== 0) {
             reqArtistById(modal_data.data.id) 
             .then(artist_info=>{
-                console.log(modal_data);
                 setModalData({ ...modal_data, ...artist_info.data }) // set data for the modal
+                setDataIsLoaded(true);
             })
             .catch(err=>{
                 console.error(err);
@@ -38,7 +38,10 @@ const Modal = () => {
             modal_window.classList.remove("display_none")
             document.addEventListener("keydown",e=>{
                 //close modal
-                if (e.key === "Escape" && modal_is_open) setModalState();
+                if (e.key === "Escape" && modal_is_open){ 
+                    setModalState();
+                    setModalData({})
+                };
             })
         } else {
             setModalData({})
@@ -53,15 +56,17 @@ const Modal = () => {
                 <h2>{modal_data?.title}</h2>
                 <hr />
                 <h2>Artists</h2>
-                <Artists
-                    artists={modal_data['artist-credit']}
-                >
-                </Artists>
+                {data_is_loaded === true&&
+                    <Artists
+                        artists={modal_data}
+                    >
+                    </Artists>
+                }
                 <hr />
                 <h2>Informations</h2>
                 <hr />
                 <h2>Note</h2>
-                <h3>{modal_data?.rating?.value??"5"} / 5</h3>
+                <h3>{modal_data?.rating?.value??"note inconnue"} / 5</h3>
                 <hr />
                 <h2>Cover Arts</h2>
                 <Images

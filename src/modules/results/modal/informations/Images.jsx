@@ -29,8 +29,8 @@ const Images = (props) => {
         <ul className="list_images">
             <li className="title_images">Total Count : {list_images?.length}</li>
             {
-                list_images.map(e=>{
-                    return <li><img src={e} className="image" alt="image cover album" loading="lazy"/></li>
+                list_images.map((img_source,index)=>{
+                    return <li key={'img_'+index}><img src={img_source} className="image" alt="image cover album" loading="lazy"/></li>
                 })
             }
         </ul>
