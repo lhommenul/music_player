@@ -2,6 +2,7 @@ import React from 'react'
 import "./css/style.css";
 import { EventEmitter} from "../../event/index"
 import { useEffect,useState } from 'react';
+import Images from "./informations/Images"
 import { reqArtistById,reqAlbumById,reqTitleById,reqCoverReleaseById} from '../../request/req'
 
 const Modal = () => {
@@ -15,6 +16,7 @@ const Modal = () => {
         setModalData({ ...modal_data, ...modal_props_data })
         setModalState()
     });
+    // OPEN AND CLOSE MODAL
     useEffect(() => {
         setModalState()
         // Close Modal on button click
@@ -28,7 +30,6 @@ const Modal = () => {
             case 0:
                 reqTitleById(modal_data.data.id)
                 .then(data=>{
-                    console.log(data.data);
                     const concat_data = {...more_info,...data.data};
                     setMoreInfo(concat_data)
                     // get cover if they exists for the bdd cover art music brainz
@@ -42,7 +43,7 @@ const Modal = () => {
                 reqArtistById(modal_data.data.id)
                 .then(data=>{
                     const concat_data = {...more_info,...data.data};
-                    setMoreInfo({...more_info,...data.data})
+                    setMoreInfo(concat_data)
                     coverImages(concat_data)
                 })
                 .catch(err=>{
@@ -53,7 +54,7 @@ const Modal = () => {
                 reqAlbumById(modal_data.data.id)
                 .then(data=>{
                     const concat_data = {...more_info,...data.data};
-                    setMoreInfo({...more_info,...data.data})
+                    setMoreInfo(concat_data)
                     coverImages(concat_data)
                 })
                 .catch(err=>{
@@ -67,22 +68,31 @@ const Modal = () => {
                 break;
         }
         function coverImages(data) {
-            data?.releases?.forEach(res=>{
-                reqCoverReleaseById(res.id)
+            let list_images = [];
+            data?.releases?.forEach(async(res,index)=>{
+                let i = await reqCoverReleaseById(res.id)
                 .then(response=>{
-                    console.log(response?.data?.images);
                     let cover_links = response?.data?.images.map(e=>{
                         return e.thumbnails.small;
                     })
-                    // console.log(response);
-                    setCoverArt(cover_art.concat(cover_links));
+                    cover_links.forEach(e=>{
+                        list_images.push(e);
+                    })
                 })
                 .catch(err=>{
                     console.log(err);
                 })
             })
+            console.log(list_images);
+            setCoverArt(cover_art.concat(list_images));
         }
     }, [modal_data]);
+    useEffect(() => {
+        console.log(cover_art);
+        return () => {
+            
+        };
+    }, [cover_art]);
     function setModalState() {
         let i = document.querySelector("#modal_window");
         if (modal_is_open) {
@@ -96,12 +106,11 @@ const Modal = () => {
         <div id="modal_window" tabIndex="1" aria-modal="true">
             <button className="modal_btn">x</button>
             <div className="modal_content">
-                {/* TITRE */}
                 <h1>{modal_data.title}</h1>
                 <h2>Informations</h2>
                 <ul>
                     <li>
-                        {/* ARTISTS */}
+                        {/* dispay all artist credit */}
                         <h3>artist credit</h3>
                         <ul>
                             {more_info["artist-credit"]?.map((artist_credit,index)=>{
@@ -110,7 +119,6 @@ const Modal = () => {
                         </ul>
                     </li>
                     <li>
-                        {/* DATE */}
                         <h3>release date</h3>
                         {   <h4>{more_info["first-release-date"]}</h4>  }
                     </li>
@@ -132,9 +140,14 @@ const Modal = () => {
                     </li>
                 </ul>
                 <h2>Cover Arts</h2>
+                <Images
+                    images={cover_art}
+                >
+                </Images>
                 <ul>
                     {
                         cover_art?.map((img,index)=>{
+                            console.log(index);
                             return <li><img className="img_modal_cover_art" key={index+Math.random()} src={img} alt="pas d'image" /></li>
                         })
                     }
