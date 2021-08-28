@@ -1,7 +1,7 @@
 import './App.css';
-import SearchBar from './modules/search/SearchBar';
-import Results from './modules/results/Results';
-import Modal from './modules/results/modal/Modal';
+import SearchBar from './modules/SearchBar';
+import Results from './modules/Results';
+import Modal from './modules/Modal';
 function App() {
   return (
     <div className="App">
