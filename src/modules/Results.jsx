@@ -1,19 +1,23 @@
 import {React} from 'react'
+import Result from "./Result";
+import './css/results.css';
 const Results = ({results}) => {
     if (!results) { // not results
-
+    
     } else { // results
         
     }
     return (
-        <div>
+        <ul className="list_container_results">
             {!results&& // If no Results 
-                <h1>Salut</h1>
+                <Result 
+                    artist_name={"aucun resultats"} 
+                ></Result>
             }            
             {results&&
-                
+                <Result></Result>
             }
-        </div>
+        </ul>
     )
 }
 export default Results;

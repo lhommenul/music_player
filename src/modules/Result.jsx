@@ -1,8 +1,13 @@
-import React from 'react'
-const Result = ({artist_names,music_title,}) => {
+import React from 'react';
+import './css/result.css';
+const Result = ({artist_name,music_title,album_title}) => {
     return (
-        <li>
+        <li className="result_container">
+            <p>{artist_name}</p>
+            <p>{music_title}</p>
+            <p>{album_title}</p>
+            <button>+</button>
         </li>
     )
 }
-export default Result
+export default Result;
