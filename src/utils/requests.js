@@ -41,7 +41,7 @@ let reqTitle = ({search_inp,offset,limit})=>{
             method:"GET",
             params:{
                 query:`recording:"${search_inp}"`,
-                inc:`artists+releases+isrcs+url-rels`,
+                inc:`artists+releases`,
                 fmt:"json",
                 limit:limit,
                 offset:offset,

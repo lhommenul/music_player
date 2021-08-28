@@ -1,11 +1,13 @@
 import React from 'react';
 import './css/result.css';
-const Result = ({artist_name,music_title,album_title}) => {
+const Result = (props) => {
+    const result_data = props.result_data;
+    console.log(result_data);
     return (
         <li className="result_container">
-            <p>{artist_name}</p>
-            <p>{music_title}</p>
-            <p>{album_title}</p>
+            <p>{result_data?.title}</p>
+            <p>{result_data["artist-credit"][0]?.name}</p>
+            <p>{result_data?.releases?.[0]?.title??"Inconnu"}</p>
             <button>+</button>
         </li>
     )
