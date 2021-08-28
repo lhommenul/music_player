@@ -15,6 +15,7 @@ function App() {
       ></SearchBar>
       <Results
         search_data={search_data}
+        set_search_data={setSearchData}
       ></Results>
       <Modal></Modal>
     </div>
