@@ -5,8 +5,8 @@ const Result = (props) => {
     console.log(result_data);
     return (
         <li className="result_container">
-            <p>{result_data?.title}</p>
-            <p>{result_data["artist-credit"][0]?.name}</p>
+            <p>{result_data?.title??"Inconnu"}</p>
+            <p>{result_data["artist-credit"][0]?.name??"Inconnu"}</p>
             <p>{result_data?.releases?.[0]?.title??"Inconnu"}</p>
             <button>+</button>
         </li>

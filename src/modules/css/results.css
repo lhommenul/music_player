@@ -1,3 +1,10 @@
 .list_container_results{
     padding: 2em;
 }
+    .total_count{
+        display: grid;
+        grid-template-columns: repeat(4,25%);
+        justify-items: center;
+        align-items: center;
+        box-shadow: 2px 2px 6px grey;
+    }
