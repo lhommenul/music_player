@@ -14,7 +14,9 @@ const Results = (props) => {
             start();
         }
         window.onscroll = function() {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && data_is_loaded && results.length <= total_count) {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && data_is_loaded) {
+                console.log(total_count);
+                console.log(results);
                 data_is_loaded = false;
                 offset += 50;
                 start();
@@ -31,7 +33,6 @@ const Results = (props) => {
                         accumulator.recordings = accumulator.recordings.concat(current_value.data.recordings);
                         return accumulator;
                     },{count:0,recordings:[]})
-                    console.log(total);
                     setTotalCount(total.count)
                     setResults(results=>results.concat(total.recordings));   
                 } else {// if not an array
