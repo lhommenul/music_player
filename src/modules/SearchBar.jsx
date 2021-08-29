@@ -3,7 +3,13 @@ const SearchBar = ({set_search_data}) => {
     function setSearchData() {
         const input = document.querySelector("#search_input"); // get input
         const select_options = document.querySelector("#select_options"); // get input
-        const data = {value:input.value,type:select_options.value,reset:true};
+        const data = {
+            value:input.value,
+            type:select_options.value,
+            reset:true,
+            data:[],
+            total_count:0
+        };
         set_search_data(data); // set search data informations
     }
     return (

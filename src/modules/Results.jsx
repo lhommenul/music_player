@@ -2,30 +2,28 @@ import {React,useEffect,useState} from 'react'
 import Result from "./Result";
 import {reqArtist,reqAlbum,reqTitle} from "../utils/requests";
 import './css/results.css';
-const Results = (props) => {
-    const [results, setResults] = useState([]);
-    const [total_count, setTotalCount] = useState(0);
+const Results = ({set_search_data,search_data}) => {
     let limit = 50, offset = 0,data_is_loaded = false;
     useEffect(() => {
-        if (props.search_data.reset) {
-            console.log("reset");
-            props.search_data.reset = false;
-            props.set_search_data(props.search_data);
+        if (search_data.reset) { // reset results
+            search_data.reset = true;
+            search_data.data = [];
+            search_data.stotal_count=0;
+            set_search_data(search_data)
+        }else{
             start();
         }
         window.onscroll = function() {
             if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight && data_is_loaded) {
-                console.log(total_count);
-                console.log(results);
                 data_is_loaded = false;
                 offset += 50;
                 start();
             }
         };
-    }, [props]);
+    }, [search_data]);
     function start() {
-        if (props.search_data.value) { // there is values
-            getDataFromApi(props.search_data)
+        if (search_data.value) { // there is values
+            getDataFromApi(search_data)
             .then(response=>{
                 if (Array.isArray(response)) {// is an array
                     let total = response.reduce((accumulator,current_value)=>{
@@ -33,11 +31,13 @@ const Results = (props) => {
                         accumulator.recordings = accumulator.recordings.concat(current_value.data.recordings);
                         return accumulator;
                     },{count:0,recordings:[]})
-                    setTotalCount(total.count)
-                    setResults(results=>results.concat(total.recordings));   
+                    search_data.data = total.recordings;
+                    search_data.total_count=total.count;
+                    set_search_data(search_data);   
                 } else {// if not an array
-                    setTotalCount(response.data.count)
-                    setResults(results=>results.concat(response.data.recordings));   
+                    search_data.data = response.data.recordings;
+                    search_data.total_count=response.data.count;
+                    set_search_data({data:response.data.recordings,total_count:response.data.count});   
                 }
                 data_is_loaded = true;
             })
@@ -45,13 +45,13 @@ const Results = (props) => {
                 console.error(err);
             })
         }
-        function getDataFromApi(seach_data) {
+        function getDataFromApi(search_data) {
             const normalise_object ={
-                search_inp:seach_data.value,
+                search_inp:search_data.value,
                 limit:limit,
                 offset:offset
             }; 
-            switch (seach_data.type) {
+            switch (search_data.type) {
                 case "0": // Title
                     return reqTitle(normalise_object);
                     case "1": // Album 
@@ -70,18 +70,18 @@ const Results = (props) => {
     }
     return (
         <ul className="list_container_results">
-            {!props.search_data.value && // If no Results 
+            {!search_data.value && // If no Results 
                 <li className="total_count">
                     Aucun Resultats
                 </li>
             }
-            {props.search_data.value && results&&
+            {search_data.value && search_data.data&&
                 <li className="total_count">
-                    Nombre Total de Reponses : {total_count}
+                    Nombre Total de Reponses : {search_data?.total_count}
                 </li>
             }            
-            {props.search_data.value && results&& // if there is results
-                results.map((result,index)=>{
+            {search_data.value && search_data.data && // if there is results
+                search_data?.data?.map((result,index)=>{
                     return <Result
                         result_data={result}
                     ></Result>;
