@@ -104,7 +104,24 @@ class Results{
         this.search_type = search_type;
         this.search_value = search_value;
         // console.log(search_type,search_value);
+        console.log(search_type);
         switch (search_type) {
+            case "0":
+                reqTitle(search_value,this.offset,this.limit)
+                .then(res=>{
+                    if (res.ok) {
+                        res.json().then((response)=>{
+                            this.setTotalResponses(response.count);
+                            response.recordings.forEach(record => {
+                                this.setResult(new Result(record,this.modal,0));
+                            });
+                        })
+                    }
+                })
+                .catch(err=>{
+                    console.log(err);
+                })                        
+                break;
             case "1":
                 reqArtist(search_value,this.offset,this.limit)
                 .then(res=>{
@@ -114,7 +131,7 @@ class Results{
                             this.setTotalResponses(response.count);
                             console.log(this.modal);
                             response.recordings.forEach(record => {
-                                this.setResult(new Result(record,this.modal));
+                                this.setResult(new Result(record,this.modal,1));
                             });
                         })
                     }
@@ -123,41 +140,25 @@ class Results{
                     console.log(err);
                 })                
                 break;
-                case "2":
-                    reqAlbum(search_value,this.offset,this.limit)
-                    .then(res=>{
-                        if (res.ok) {
-                            res.json().then((response)=>{
-                                this.setTotalResponses(response.count);
-                                response.recordings.forEach(record => {
-                                    this.setResult(new Result(record,this.modal));
-                                });
-                            })
-                        }
-                    })
-                    .catch(err=>{
-                        console.log(err);
-                    })                    
-                    break;
-                    case "0":
-                        reqTitle(search_value,this.offset,this.limit)
-                        .then(res=>{
-                            if (res.ok) {
-                                res.json().then((response)=>{
-                                    this.setTotalResponses(response.count);
-                                    response.recordings.forEach(record => {
-                                        this.setResult(new Result(record,this.modal));
-                                    });
-                                })
-                            }
+            case "2":
+                reqAlbum(search_value,this.offset,this.limit)
+                .then(res=>{
+                    if (res.ok) {
+                        res.json().then((response)=>{
+                            this.setTotalResponses(response.count);
+                            response.recordings.forEach(record => {
+                                this.setResult(new Result(record,this.modal,2));
+                            });
                         })
-                        .catch(err=>{
-                            console.log(err);
-                        })                        
-                        break;
-                        case "3":
-                
-                            break;                                                    
+                    }
+                })
+                .catch(err=>{
+                    console.log(err);
+                })                    
+                break;
+            case "3":
+    
+                break;                                                    
             default:
                 console.error("error");
                 break;

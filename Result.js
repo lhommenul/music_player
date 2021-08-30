@@ -1,14 +1,17 @@
 class Result{
     html = [];
     res_data = {};
+    res_raw_data;
     modal;
-    constructor(result,modal){    
+    constructor(result,modal,type){    
         this.modal = modal;
         this.res_data = {
             artist_name : result["artist-credit"]?.[0]?.name??"Artist Inconnu",
             music_title : result?.title??"Titre Inconnu",
-            release_name : result?.releases?.[0]?.title??"Album Inconnu"
+            release_name : result?.releases?.[0]?.title??"Album Inconnu",
+            type : type
         }
+        this.res_raw_data = result;
         this.generateHtml();
     }
     generateHtml() {
@@ -30,16 +33,17 @@ class Result{
         })();
 
         (()=>{ // append elements
-            list_element.appendChild(artist_name);
-            list_element.appendChild(release_name);
             list_element.appendChild(music_title);
+            list_element.appendChild(release_name);
+            list_element.appendChild(artist_name);
             list_element.appendChild(see_more);
         })();
 
         (()=>{ // events ...    
             see_more.addEventListener('click',()=>{
                 console.log(this.modal);
-                this.modal.setModalStatut()
+                this.modal.setModalStatut();
+                this.modal.setModalData(this.res_raw_data,this.res_data.type);
             })
         })();
         this.html = list_element;
