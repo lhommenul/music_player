@@ -21,5 +21,3 @@ reqArtist({search_inp:"daft punk",limit:50,offset:0})
 const container_results = new Results();
 
 const search_bar = new SearchBar(container_results);
-
-new Modal();

@@ -1,5 +1,6 @@
 import {reqArtist,reqAlbum,reqTitle} from './req.js'
 import Result from './Result.js';
+import Modal from './Modal.js'
 class Results{
     results = [];
     search_type;
@@ -7,8 +8,10 @@ class Results{
     limit = 50;
     offset = 0;
     loaded = false;
+    modal;
     html;
     constructor(){
+        this.modal = new Modal();
         this.html = this.generateHtml("main");
     }
     generateHtml(parent_id) {
@@ -109,8 +112,9 @@ class Results{
                         res.json().then((response)=>{
                             console.log(response);
                             this.setTotalResponses(response.count);
+                            console.log(this.modal);
                             response.recordings.forEach(record => {
-                                this.setResult(new Result(record));
+                                this.setResult(new Result(record,this.modal));
                             });
                         })
                     }
@@ -126,7 +130,7 @@ class Results{
                             res.json().then((response)=>{
                                 this.setTotalResponses(response.count);
                                 response.recordings.forEach(record => {
-                                    this.setResult(new Result(record));
+                                    this.setResult(new Result(record,this.modal));
                                 });
                             })
                         }
@@ -142,7 +146,7 @@ class Results{
                                 res.json().then((response)=>{
                                     this.setTotalResponses(response.count);
                                     response.recordings.forEach(record => {
-                                        this.setResult(new Result(record));
+                                        this.setResult(new Result(record,this.modal));
                                     });
                                 })
                             }

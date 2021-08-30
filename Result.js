@@ -1,7 +1,9 @@
 class Result{
     html = [];
     res_data = {};
-    constructor(result){    
+    modal;
+    constructor(result,modal){    
+        this.modal = modal;
         this.res_data = {
             artist_name : result["artist-credit"]?.[0]?.name??"Artist Inconnu",
             music_title : result?.title??"Titre Inconnu",
@@ -35,7 +37,10 @@ class Result{
         })();
 
         (()=>{ // events ...    
-
+            see_more.addEventListener('click',()=>{
+                console.log(this.modal);
+                this.modal.setModalStatut()
+            })
         })();
         this.html = list_element;
     }

@@ -1,0 +1,32 @@
+.modal_container{
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0, 0, 0, 0.9);
+    display:grid;
+    grid-template-columns: auto 80% auto;
+    grid-template-rows: auto 95%;
+}
+
+    .modal{
+        grid-column: 2;
+        grid-row: 2;
+        background-color: whitesmoke;
+        height: 100%;
+        width: 100%;
+    }
+    .btn_modal{
+        grid-column: 2;
+        grid-row: 1;
+        background-color: rgb(190, 0, 0);
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+    .not_displayed{
+        display: none;
+    }
