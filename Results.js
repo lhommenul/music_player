@@ -104,7 +104,6 @@ class Results{
         this.search_type = search_type;
         this.search_value = search_value;
         // console.log(search_type,search_value);
-        console.log(search_type);
         switch (search_type) {
             case "0":
                 reqTitle(search_value,this.offset,this.limit)
@@ -157,7 +156,28 @@ class Results{
                 })                    
                 break;
             case "3":
-    
+                let total_count = 0;
+                Promise.all([reqTitle(search_value,this.offset,this.limit),reqArtist(search_value,this.offset,this.limit),reqAlbum(search_value,this.offset,this.limit)])
+                .then(responses=>{
+                    responses.forEach(async(res)=>{
+                        if (res.ok) {
+                            await res.json().then((response)=>{
+                                console.log(response);
+                                total_count+=response.count;
+                                response.recordings.forEach(record => {
+                                    this.setResult(new Result(record,this.modal,2));
+                                });
+                            })
+                        }
+                    })
+                })
+                .then(()=>{
+                    console.log(total_count);
+                    this.setTotalResponses(total_count);
+                })
+                .catch(err=>{
+                    console.log(err);
+                })      
                 break;                                                    
             default:
                 console.error("error");

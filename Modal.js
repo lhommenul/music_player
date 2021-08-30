@@ -47,8 +47,8 @@ class Modal{
         }
     }
     setModalData(modal_data,type){
+        this.clearModalData()
         const modal_html_container = this.html.querySelector('.modal');
-        console.log(modal_data);
         switch (type) {
             case 0:
                 reqTitleById(modal_data.id)
@@ -90,7 +90,18 @@ class Modal{
                             })                        
                         break;                            
                         case 3:
-                
+                            Promise.all([reqAlbumById(modal_data.id),reqArtistById(modal_data.id),reqTitleById(modal_data.id)])
+                            .then(res=>{
+                                if (res.ok) {
+                                    res.json().then(async(response)=>{
+                                        console.log(response);
+                                        //  generateHtml(response)
+                                    })
+                                }
+                            })
+                            .catch(err=>{
+                                console.log(err);
+                            })           
                         break;                 
             default:
                 console.error("undefined type");
