@@ -61,42 +61,45 @@ let reqTitle = (search_inp,offset,limit)=>{
 // REQUEST BY ID
 let reqArtistById = (id)=>{
     try {
-        return fetch({
-            url:`https://musicbrainz.org/ws/2/recording/${encodeURI(id)}`,
-            method:"GET",
-            params:{
-                fmt:"json",
-                inc:`artists+releases+isrcs+url-rels`,
-            }
-        })
+        return fetch(
+            `https://musicbrainz.org/ws/2/recording/${encodeURI(id)}?`+new URLSearchParams(
+                {                
+                    fmt:"json",
+                    inc:`artists+releases+isrcs+url-rels`
+                }
+            ),
+            {method:"GET"}
+        )
     } catch (error) {
         return error;
     }
 }
 let reqAlbumById = async (id)=>{
     try {
-        return await fetch({
-            url:`https://musicbrainz.org/ws/2/recording/${encodeURI(id)}`,
-            method:"GET",
-            params:{
-                fmt:"json",
-                inc:`artists+releases+isrcs+url-rels`,
-            }
-        })
+        return await fetch(
+            `https://musicbrainz.org/ws/2/recording/${encodeURI(id)}?`+new URLSearchParams(
+                {
+                    fmt:"json",
+                    inc:`artists+releases+isrcs+url-rels`,
+                }
+            ),
+            {method:"GET"}
+        )
     } catch (error) {
         return error;
     }
 }
 let reqTitleById = (id)=>{
     try {
-        return fetch({
-            url:`https://musicbrainz.org/ws/2/recording/${encodeURI(id)}`,
-            method:"GET",
-            params:{
-                fmt:"json",
-                inc:`artists+releases+isrcs+url-rels`,
-            }
-        })
+        return fetch(
+            `https://musicbrainz.org/ws/2/recording/${encodeURI(id)}?`+new URLSearchParams(
+                {
+                    fmt:"json",
+                    inc:`artists+releases+isrcs+url-rels`,
+                }
+            ),
+            {method:"GET"}
+        )
     } catch (error) {
         return error;
     }
@@ -105,10 +108,10 @@ let reqTitleById = (id)=>{
 let reqCoverReleaseById = (id)=>{
     // ex : https://coverartarchive.org/release/99b09d02-9cc9-3fed-8431-f162165a9371
     try {
-        return fetch({
-            url:`https://coverartarchive.org/release/${encodeURI(id)}`,
-            method:"GET",
-        })
+        return fetch(
+            `https://coverartarchive.org/release/${encodeURI(id)}`,
+            {method:"GET"},
+        )
     } catch (error) {
         return error;
     }

@@ -51,9 +51,7 @@ class SearchBar{
 
         (()=>{ // events ...    
             button.addEventListener('click',(ev)=>{
-                let search_value = encodeURI(input.value);
-                this.container_results.searchData(select.value,encodeURI(input.value))
-                console.log(search_value);
+                this.container_results.searchData(select.value,input.value)
             })
         })();
         return form;

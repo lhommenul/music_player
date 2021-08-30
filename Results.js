@@ -2,8 +2,11 @@ import {reqArtist,reqAlbum,reqTitle} from './req.js'
 import Result from './Result.js';
 class Results{
     results = [];
+    search_type;
+    search_value;
     limit = 50;
     offset = 0;
+    loaded = false;
     html;
     constructor(){
         this.html = this.generateHtml("main");
@@ -51,7 +54,14 @@ class Results{
         })();
 
         (()=>{ // events ...    
-
+            window.addEventListener('scroll',()=>{
+                if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight && this.loaded) {
+                    this.loaded = false;
+                    console.log(this.offset);
+                    this.offset+=50;
+                    this.searchData(this.search_type,this.search_value)
+                }
+            })
         })();
         return section;
     }
@@ -70,6 +80,7 @@ class Results{
         return this.results = [];
     }
     setTotalResponses(total_responses){
+        this.loaded = true;
         const default_information = this.html.querySelector(".default_information")
         const no_results = this.html.querySelector(".no_results")
         const total_count = this.html.querySelector(".total_count");
@@ -84,7 +95,11 @@ class Results{
         }
     }
     searchData(search_type,search_value){
-        this.clearResults();
+        if (this.search_value != search_value || this.search_type != search_type) {
+            this.clearResults();
+        }
+        this.search_type = search_type;
+        this.search_value = search_value;
         // console.log(search_type,search_value);
         switch (search_type) {
             case "1":
@@ -92,9 +107,9 @@ class Results{
                 .then(res=>{
                     if (res.ok) {
                         res.json().then((response)=>{
+                            console.log(response);
                             this.setTotalResponses(response.count);
                             response.recordings.forEach(record => {
-                                console.log(response);
                                 this.setResult(new Result(record));
                             });
                         })
