@@ -20,11 +20,11 @@ class Results{
         let section = document.createElement('section');
             let list = document.createElement('ul');
                 let data = document.createElement('li');
-                    let music_title = document.createElement('p')
-                    let release_title = document.createElement('p')
-                    let artist_name = document.createElement('p')
-                    let responses_count = document.createElement('p')
-                        let total_count = document.createElement('span')
+                    let music_title = document.createElement('p');
+                    let release_title = document.createElement('p');
+                    let artist_name = document.createElement('p');
+                    let responses_count = document.createElement('p');
+                        let total_count = document.createElement('span');
                 let no_data = document.createElement('li');
                     let no_data_text = document.createElement('p');
 
@@ -138,36 +138,21 @@ class Results{
                 })                    
                 break;
             case "3":
-                let total_count_responses = 0;
-                Promise.all([reqTitle(search_value,this.offset,this.limit),reqArtist(search_value,this.offset,this.limit),reqAlbum(search_value,this.offset,this.limit)])
-                .then(responses=>{
-                    let list_requests = [];
-                    responses.forEach((res)=>{
-                        if (res.ok) {
-                            list_requests.push(res.json())
-                        }
-                    })
-                    Promise.all(list_requests)
-                    .then(responses=>{
-                        responses.forEach(response=>{
-                            console.log(response);
-                            total_count_responses+=response.count;
-                            response.recordings.forEach(record => {
-                                this.setResult(new Result(record,this.modal,2));
-                            });
-                        })
-                    })
-                    .then(()=>{
-                        console.log(total_count_responses);
-                        this.setTotalResponses(total_count_responses);
-                    })
-                    .catch(err=>{
-                        console.error(err);
-                    })
-                })
-                .catch(err=>{
-                    console.log(err);
-                })      
+                (async ()=>{
+                    const albums = await requestHandler(reqAlbum(search_value,this.offset,this.limit));
+                    const titles = await requestHandler(reqTitle(search_value,this.offset,this.limit));
+                    const artists = await requestHandler(reqArtist(search_value,this.offset,this.limit));
+                    albums.recordings.forEach(record => {
+                        this.setResult(new Result(record,this.modal,2));
+                    });
+                    titles.recordings.forEach(record => {
+                        this.setResult(new Result(record,this.modal,0));
+                    });
+                    artists.recordings.forEach(record => {
+                        this.setResult(new Result(record,this.modal,1));
+                    });
+                    this.setTotalResponses(albums.count+artists.count+titles.count);
+                })();
                 break;                                                    
             default:
                 console.error("error");
