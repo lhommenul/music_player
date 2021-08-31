@@ -1,4 +1,5 @@
 import {reqArtist,reqAlbum,reqTitle} from './req.js'
+import {setLoadingSpinner,requestHandler} from './utils/Utils.js'
 import Result from './Result.js';
 import Modal from './Modal.js'
 class Results{
@@ -60,9 +61,9 @@ class Results{
             window.addEventListener('scroll',()=>{
                 if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight && this.loaded) {
                     this.loaded = false;
-                    console.log(this.offset);
+                    setLoadingSpinner("footer");
                     this.offset+=50;
-                    this.searchData(this.search_type,this.search_value)
+                    this.searchData(this.search_type,this.search_value,true)
                 }
             })
         })();
@@ -80,7 +81,9 @@ class Results{
         this.html.querySelectorAll('.result_container').forEach(res=>{
             res.remove()
         })
-        return this.results = [];
+        this.offset = 0;
+        this.results = [];
+        console.log("data has been cleared");
     }
     setTotalResponses(total_responses){
         this.loaded = true;
@@ -97,83 +100,70 @@ class Results{
             no_results.classList.remove("not_displayed")
         }
     }
-    searchData(search_type,search_value){
-        if (this.search_value != search_value || this.search_type != search_type) {
+    searchData(search_type,search_value,load_more=false){
+        if (this.search_value != search_value || this.search_type != search_type || !load_more) { // clear html elements and object witch contain all the older responses
             this.clearResults();
         }
         this.search_type = search_type;
         this.search_value = search_value;
-        // console.log(search_type,search_value);
         switch (search_type) {
             case "0":
-                reqTitle(search_value,this.offset,this.limit)
-                .then(res=>{
-                    if (res.ok) {
-                        res.json().then((response)=>{
-                            this.setTotalResponses(response.count);
-                            response.recordings.forEach(record => {
-                                this.setResult(new Result(record,this.modal,0));
-                            });
-                        })
-                    }
-                })
-                .catch(err=>{
-                    console.log(err);
-                })                        
+                requestHandler(reqTitle(search_value,this.offset,this.limit))
+                .then((response)=>{
+                    this.setTotalResponses(response.count);
+                    response.recordings.forEach(record => {
+                        this.setResult(new Result(record,this.modal,0));
+                    });
+                })                  
                 break;
             case "1":
-                reqArtist(search_value,this.offset,this.limit)
-                .then(res=>{
-                    if (res.ok) {
-                        res.json().then((response)=>{
-                            console.log(response);
-                            this.setTotalResponses(response.count);
-                            console.log(this.modal);
-                            response.recordings.forEach(record => {
-                                this.setResult(new Result(record,this.modal,1));
-                            });
-                        })
-                    }
-                })
-                .catch(err=>{
-                    console.log(err);
-                })                
+                requestHandler(reqArtist(search_value,this.offset,this.limit))
+                .then((response)=>{
+                    this.setTotalResponses(response.count);
+                    response.recordings.forEach(record => {
+                        this.setResult(new Result(record,this.modal,1));
+                    });
+                })         
                 break;
             case "2":
-                reqAlbum(search_value,this.offset,this.limit)
-                .then(res=>{
-                    if (res.ok) {
-                        res.json().then((response)=>{
-                            this.setTotalResponses(response.count);
-                            response.recordings.forEach(record => {
-                                this.setResult(new Result(record,this.modal,2));
-                            });
-                        })
-                    }
+                requestHandler(reqAlbum(search_value,this.offset,this.limit))
+                .then((response)=>{
+                    this.setTotalResponses(response.count);
+                    response.recordings.forEach(record => {
+                        this.setResult(new Result(record,this.modal,2));
+                    });
                 })
                 .catch(err=>{
                     console.log(err);
                 })                    
                 break;
             case "3":
-                let total_count = 0;
+                let total_count_responses = 0;
                 Promise.all([reqTitle(search_value,this.offset,this.limit),reqArtist(search_value,this.offset,this.limit),reqAlbum(search_value,this.offset,this.limit)])
                 .then(responses=>{
-                    responses.forEach(async(res)=>{
+                    let list_requests = [];
+                    responses.forEach((res)=>{
                         if (res.ok) {
-                            await res.json().then((response)=>{
-                                console.log(response);
-                                total_count+=response.count;
-                                response.recordings.forEach(record => {
-                                    this.setResult(new Result(record,this.modal,2));
-                                });
-                            })
+                            list_requests.push(res.json())
                         }
                     })
-                })
-                .then(()=>{
-                    console.log(total_count);
-                    this.setTotalResponses(total_count);
+                    Promise.all(list_requests)
+                    .then(responses=>{
+                        responses.forEach(response=>{
+                            console.log(response);
+                            total_count_responses+=response.count;
+                            response.recordings.forEach(record => {
+                                this.setResult(new Result(record,this.modal,2));
+                            });
+                        })
+                    })
+                    .then(()=>{
+                        console.log(total_count_responses);
+                        this.setTotalResponses(total_count_responses);
+                    })
+                    .catch(err=>{
+                        console.error(err);
+                    })
                 })
                 .catch(err=>{
                     console.log(err);

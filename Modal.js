@@ -88,21 +88,7 @@ class Modal{
                             .catch(err=>{
                                 console.log(err);
                             })                        
-                        break;                            
-                        case 3:
-                            Promise.all([reqAlbumById(modal_data.id),reqArtistById(modal_data.id),reqTitleById(modal_data.id)])
-                            .then(res=>{
-                                if (res.ok) {
-                                    res.json().then(async(response)=>{
-                                        console.log(response);
-                                        //  generateHtml(response)
-                                    })
-                                }
-                            })
-                            .catch(err=>{
-                                console.log(err);
-                            })           
-                        break;                 
+                        break;                                        
             default:
                 console.error("undefined type");
                 break;
