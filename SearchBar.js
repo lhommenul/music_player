@@ -53,6 +53,12 @@ class SearchBar{
             button.addEventListener('click',(ev)=>{
                 this.container_results.searchData(select.value,input.value)
             })
+            input.addEventListener('keydown',(ev)=>{
+                if (ev.key === "Enter") {
+                    this.container_results.searchData(select.value,input.value);
+                    ev.preventDefault();
+                }
+            });
         })();
         return form;
     }

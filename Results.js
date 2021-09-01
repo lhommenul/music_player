@@ -8,6 +8,7 @@ class Results{
     search_value;
     limit = 50;
     offset = 0;
+    result_count = 1;
     loaded = false;
     modal;
     html;
@@ -20,6 +21,7 @@ class Results{
         let section = document.createElement('section');
             let list = document.createElement('ul');
                 let data = document.createElement('li');
+                    let number = document.createElement('p');
                     let music_title = document.createElement('p');
                     let release_title = document.createElement('p');
                     let artist_name = document.createElement('p');
@@ -27,12 +29,11 @@ class Results{
                         let total_count = document.createElement('span');
                 let no_data = document.createElement('li');
                     let no_data_text = document.createElement('p');
-
         (()=>{ // set values and data
             data.className = "default_information not_displayed"
-
+                number.textContent = "numero"
                 music_title.innerText = "Titre de la musique";
-                release_title.innerText = "Titre de l'album";
+                release_title.innerText = "Titre de l'album"; 
                 artist_name.innerText = "Nom de l'artiste";
                 responses_count.innerText = "Résultats : ";
                     total_count.className = "total_count"
@@ -43,7 +44,7 @@ class Results{
 
         (()=>{ // append elements
             section.appendChild(list);
-
+                data.appendChild(number)
                 data.appendChild(music_title)
                 data.appendChild(release_title)
                 data.appendChild(artist_name)
@@ -70,6 +71,7 @@ class Results{
         return section;
     }
     setResult(result){
+        this.result_count++;
         this.results.push(result); // push the object inside a variable
         const list_container = this.html.querySelector('ul'); // select the html container element 
         list_container.appendChild(result.getHtml()) // push results inside the container
@@ -81,6 +83,7 @@ class Results{
         this.html.querySelectorAll('.result_container').forEach(res=>{
             res.remove()
         })
+        this.result_count = 1;
         this.offset = 0;
         this.results = [];
         console.log("data has been cleared");
@@ -112,7 +115,7 @@ class Results{
                 .then((response)=>{
                     this.setTotalResponses(response.count);
                     response.recordings.forEach(record => {
-                        this.setResult(new Result(record,this.modal,0));
+                        this.setResult(new Result(record,this.modal,0,this.result_count));
                     });
                 })                  
                 break;
@@ -121,7 +124,7 @@ class Results{
                 .then((response)=>{
                     this.setTotalResponses(response.count);
                     response.recordings.forEach(record => {
-                        this.setResult(new Result(record,this.modal,1));
+                        this.setResult(new Result(record,this.modal,1,this.result_count));
                     });
                 })         
                 break;
@@ -130,7 +133,7 @@ class Results{
                 .then((response)=>{
                     this.setTotalResponses(response.count);
                     response.recordings.forEach(record => {
-                        this.setResult(new Result(record,this.modal,2));
+                        this.setResult(new Result(record,this.modal,2,this.result_count));
                     });
                 })
                 .catch(err=>{
@@ -143,13 +146,13 @@ class Results{
                     const titles = await requestHandler(reqTitle(search_value,this.offset,this.limit));
                     const artists = await requestHandler(reqArtist(search_value,this.offset,this.limit));
                     albums.recordings.forEach(record => {
-                        this.setResult(new Result(record,this.modal,2));
+                        this.setResult(new Result(record,this.modal,2,this.result_count));
                     });
                     titles.recordings.forEach(record => {
-                        this.setResult(new Result(record,this.modal,0));
+                        this.setResult(new Result(record,this.modal,0,this.result_count));
                     });
                     artists.recordings.forEach(record => {
-                        this.setResult(new Result(record,this.modal,1));
+                        this.setResult(new Result(record,this.modal,1,this.result_count));
                     });
                     this.setTotalResponses(albums.count+artists.count+titles.count);
                 })();

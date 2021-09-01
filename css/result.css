@@ -1,6 +1,6 @@
 .default_information,.result_container{
     display: grid;
-    grid-template-columns: repeat(4,25%);
+    grid-template-columns: repeat(5,20%);
     /* justify-items: center; */
     align-items: center;
 }
