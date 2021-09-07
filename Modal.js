@@ -1,4 +1,6 @@
 import {reqArtistById,reqAlbumById,reqTitleById,reqCoverReleaseById} from "./req.js"
+import {millisToMinutesAndSeconds} from './utils/Utils.js'
+
 class Modal{
     html;
     modal_is_open=false;
@@ -31,6 +33,11 @@ class Modal{
             container_modal.addEventListener('click',e=>{
                 if (container_modal === e.target) { // check if this is the background witch is clicked
                     this.setModalStatut(container_modal)
+                }
+            })
+            window.addEventListener("keyup",e=>{
+                if (e.key === "Escape" && this.modal_is_open) {
+                    this.setModalStatut(container_modal)    
                 }
             })
             btn_close_modal.addEventListener('click',()=>{ // check if the btn is 
@@ -98,10 +105,13 @@ class Modal{
                 const title = document.createElement('p');
             const artists_container  = document.createElement('li');
             const releases_container  = document.createElement('li');
+            const music_length  = document.createElement('li');
             const rating_container  = document.createElement('li');
                 const rating  = document.createElement('p');
             const list_images  = document.createElement('ul');
             (()=>{ // appends elements
+                console.log(modal_data);
+
                 title_container.appendChild(title)
                 rating_container.appendChild(rating)
 
@@ -109,25 +119,28 @@ class Modal{
                 modal_html_container.appendChild(artists_container)
                 modal_html_container.appendChild(releases_container)
                 modal_html_container.appendChild(rating_container)
+                modal_html_container.appendChild(music_length)
                 modal_html_container.appendChild(list_images)
             })();
 
             (()=>{ // set data
+                list_images.className = "container_img";
+                // music length
+                music_length.textContent = "Duree : "+millisToMinutesAndSeconds(modal_data.length);
                 // rating
-                console.log(modal_data.rating);
-                rating.textContent = modal_data.rating.value??"Aucune Note"
+                rating.textContent = "Note : "+modal_data.rating.value+" / 5"??"Aucune Note"
 
                 title.textContent = modal_data.title;
                 // artist-credit
                 modal_data?.['artist-credit'].forEach(artist_data => { // set and append
                     const artist  = document.createElement('p');
                     artist.textContent = artist_data.name;
-                    artists_container.appendChild(artist)
+                    artists_container.appendChild(artist);
                 });
                 modal_data?.releases.forEach(release_data => { // set and append
                     const release  = document.createElement('p');
                     release.textContent = release_data.name;
-                    releases_container.appendChild(release)
+                    releases_container.appendChild(release);
                 });
             })();
             (()=>{
@@ -135,10 +148,11 @@ class Modal{
                     reqCoverReleaseById(release.id)
                     .then(res=>{
                         if (res.ok) {
-                            res.json().then(async(response)=>{
+                            res.json().then((response)=>{
                                 response.images.forEach(image=>{
                                     const img = document.createElement('img')
                                     img.src = image.thumbnails.small;
+                                    img.loading = "lazy";
                                     img.alt = "Pochette d'album";
                                     list_images.appendChild(img)
                                 })
@@ -152,9 +166,6 @@ class Modal{
 
             })();
         }
-    }
-    getModalCover(){
-
     }
     setModalStatut(){
         this.modal_is_open = !this.modal_is_open;

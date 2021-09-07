@@ -1,7 +1,8 @@
 import {reqArtist,reqAlbum,reqTitle} from './req.js'
 import {setLoadingSpinner,requestHandler} from './utils/Utils.js'
 import Result from './Result.js';
-import Modal from './Modal.js'
+import Modal from './Modal.js';
+
 class Results{
     results = [];
     search_type;
@@ -38,7 +39,6 @@ class Results{
                 responses_count.innerText = "Résultats : ";
                     total_count.className = "total_count"
             no_data.className = "no_results"
-
                 no_data_text.innerText = "Aucuns Résultats"
         })();
 
@@ -62,7 +62,6 @@ class Results{
             window.addEventListener('scroll',()=>{
                 if (window.innerHeight + window.pageYOffset >= document.body.offsetHeight && this.loaded) {
                     this.loaded = false;
-                    setLoadingSpinner("footer");
                     this.offset+=50;
                     this.searchData(this.search_type,this.search_value,true)
                 }
@@ -107,12 +106,14 @@ class Results{
         if (this.search_value != search_value || this.search_type != search_type || !load_more) { // clear html elements and object witch contain all the older responses
             this.clearResults();
         }
+        setLoadingSpinner("#footer");
         this.search_type = search_type;
         this.search_value = search_value;
         switch (search_type) {
             case "0":
                 requestHandler(reqTitle(search_value,this.offset,this.limit))
                 .then((response)=>{
+                    setLoadingSpinner("#footer");
                     this.setTotalResponses(response.count);
                     response.recordings.forEach(record => {
                         this.setResult(new Result(record,this.modal,0,this.result_count));
@@ -122,6 +123,7 @@ class Results{
             case "1":
                 requestHandler(reqArtist(search_value,this.offset,this.limit))
                 .then((response)=>{
+                    setLoadingSpinner("#footer");
                     this.setTotalResponses(response.count);
                     response.recordings.forEach(record => {
                         this.setResult(new Result(record,this.modal,1,this.result_count));
@@ -131,6 +133,7 @@ class Results{
             case "2":
                 requestHandler(reqAlbum(search_value,this.offset,this.limit))
                 .then((response)=>{
+                    setLoadingSpinner("#footer");
                     this.setTotalResponses(response.count);
                     response.recordings.forEach(record => {
                         this.setResult(new Result(record,this.modal,2,this.result_count));
@@ -154,6 +157,7 @@ class Results{
                     artists.recordings.forEach(record => {
                         this.setResult(new Result(record,this.modal,1,this.result_count));
                     });
+                    setLoadingSpinner("#footer");
                     this.setTotalResponses(albums.count+artists.count+titles.count);
                 })();
                 break;                                                    

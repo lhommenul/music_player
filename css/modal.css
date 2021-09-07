@@ -11,7 +11,9 @@
     grid-template-columns: auto 80% auto;
     grid-template-rows: auto 95%;
 }
-
+    .modal_container ul{
+        list-style: none;
+    }
     .modal{
         grid-column: 2;
         grid-row: 2;
@@ -19,7 +21,8 @@
         height: 100%;
         width: 100%;
         padding: 0em;        
-        margin: 0em;        
+        margin: 0em;   
+        overflow: scroll;     
     }
     .btn_modal{
         grid-column: 2;
