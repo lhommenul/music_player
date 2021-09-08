@@ -101,31 +101,45 @@ class Modal{
                 break;
         }
         function generateHtml(modal_data) {
+            
             const title_container = document.createElement('li');
                 const title = document.createElement('p');
             const artists_container  = document.createElement('li');
             const releases_container  = document.createElement('li');
             const music_length  = document.createElement('li');
-            const constainer_list_genre  = document.createElement('li');
-                const list_genres  = document.createElement('ul'); 
-                    const genre  = document.createElement('li');
+            const container_genres  = document.createElement('li');
+                const list_genres = document.createElement('ul');
             const rating_container  = document.createElement('li');
                 const rating  = document.createElement('p');
             const list_images  = document.createElement('ul');
+
             (()=>{ // appends elements
                 console.log(modal_data);
 
                 title_container.appendChild(title)
                 rating_container.appendChild(rating)
 
-                constainer_list_genre.appendChild(list_genres)
-                list_genres.appendChild(genre)
+                container_genres.appendChild(list_genres)
 
+                // Titre
                 modal_html_container.appendChild(title_container)
+
+                // Artists
                 modal_html_container.appendChild(artists_container)
+
+                // Releases
                 modal_html_container.appendChild(releases_container)
+
+                // GENRES
+                modal_html_container.appendChild(container_genres)
+
+                // RATING
                 modal_html_container.appendChild(rating_container)
+
+                // LENGTH
                 modal_html_container.appendChild(music_length)
+
+                // COVER
                 modal_html_container.appendChild(list_images)
             })();
 
@@ -134,14 +148,26 @@ class Modal{
                 // music length
                 music_length.textContent = "Duree : "+millisToMinutesAndSeconds(modal_data.length);
                 // rating
-                rating.textContent = "Note : "+modal_data.rating.value+" / 5"??"Aucune Note"
+
+                if (modal_data.rating.value) rating.textContent = `Note : ${modal_data.rating.value} / 5`;
+                else rating.textContent = "Aucune Note"
 
                 title.textContent = modal_data.title;
+
+                // genres
+                modal_data?.genres.forEach(genre => {
+                    console.log("executed");
+                    const ele_genre = document.createElement("li");
+                    ele_genre.innerText = genre.name;
+                    container_genres.appendChild(ele_genre);
+                });    
+                console.log(container_genres);
+
                 // artist-credit
                 modal_data?.['artist-credit'].forEach(artist_data => { // set and append
                     const artist  = document.createElement('p');
                     artist.textContent = artist_data.name;
-                    artists_container.appendChild(artist);
+                    container_genres.appendChild(artist);
                 });
                 modal_data?.releases.forEach(release_data => { // set and append
                     const release  = document.createElement('p');

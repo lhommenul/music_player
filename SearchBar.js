@@ -30,7 +30,7 @@ class SearchBar{
             option_everything.innerText="everything";
 
             button.type = "button"
-            button.value = "Envoyer"
+            button.value = "Rechercher"
         })();
 
         (()=>{ // append elements
