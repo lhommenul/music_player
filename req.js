@@ -63,7 +63,7 @@ let reqArtistById = (id)=>{
             `https://musicbrainz.org/ws/2/recording/${encodeURI(id)}?`+new URLSearchParams(
                 {                
                     fmt:"json",
-                    inc:`artists+releases+ratings`
+                    inc:`artists+releases+ratings+genres`
                 }
             ),
             {method:"GET"}
@@ -78,7 +78,7 @@ let reqAlbumById = async (id)=>{
             `https://musicbrainz.org/ws/2/recording/${encodeURI(id)}?`+new URLSearchParams(
                 {
                     fmt:"json",
-                    inc:`artists+releases+ratings`,
+                    inc:`artists+releases+ratings+genres`,
                 }
             ),
             {method:"GET"}
@@ -93,7 +93,7 @@ let reqTitleById = (id)=>{
             `https://musicbrainz.org/ws/2/recording/${encodeURI(id)}?`+new URLSearchParams(
                 {
                     fmt:"json",
-                    inc:`artists+releases+ratings`,
+                    inc:`artists+releases+ratings+genres`,
                 }
             ),
             {method:"GET"}
