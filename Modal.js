@@ -106,6 +106,9 @@ class Modal{
             const artists_container  = document.createElement('li');
             const releases_container  = document.createElement('li');
             const music_length  = document.createElement('li');
+            const constainer_list_genre  = document.createElement('li');
+                const list_genres  = document.createElement('ul'); 
+                    const genre  = document.createElement('li');
             const rating_container  = document.createElement('li');
                 const rating  = document.createElement('p');
             const list_images  = document.createElement('ul');
@@ -114,6 +117,9 @@ class Modal{
 
                 title_container.appendChild(title)
                 rating_container.appendChild(rating)
+
+                constainer_list_genre.appendChild(list_genres)
+                list_genres.appendChild(genre)
 
                 modal_html_container.appendChild(title_container)
                 modal_html_container.appendChild(artists_container)
