@@ -1,5 +1,5 @@
 // ==== MODULES ====
-import {reqArtist} from './req.js'
+import {reqArtist} from './Request.js'
 import SearchBar from './SearchBar.js'
 import Results from './Results.js'
 

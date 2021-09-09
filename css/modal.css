@@ -22,8 +22,34 @@
         width: 100%;
         padding: 0em;        
         margin: 0em;   
-        overflow: scroll;     
+        overflow: scroll;
+        display: flex;
+        flex-direction: column;
     }
+        .modal > li{
+            text-align: center;
+            margin: 1rem 0rem;
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .modal > li:nth-child(2n+2){
+            box-shadow: 3px 3px 6px grey;
+        }
+        .modal > li:nth-child(2n+1){
+            box-shadow: 3px 3px 6px grey;
+        }
+        .container_img{
+            margin-top: 2rem;
+        }
+        .album_element
+        .album_element{
+            padding: 0.3rem;
+            background-color: black;
+            margin: 0.3rem 0.3rem;
+            color: white;
+        }
     .btn_modal{
         grid-column: 2;
         grid-row: 1;

@@ -1,4 +1,4 @@
-import {reqArtist,reqAlbum,reqTitle} from './req.js'
+import {reqArtist,reqAlbum,reqTitle} from './Request.js'
 import {setLoadingSpinner,requestHandler} from './utils/Utils.js'
 import Result from './Result.js';
 import Modal from './Modal.js';
@@ -75,9 +75,11 @@ class Results{
         const list_container = this.html.querySelector('ul'); // select the html container element 
         list_container.appendChild(result.getHtml()) // push results inside the container
     }
+
     getResults(){
         return this.results;
     }
+
     clearResults(){
         this.html.querySelectorAll('.result_container').forEach(res=>{
             res.remove()
@@ -87,6 +89,7 @@ class Results{
         this.results = [];
         console.log("data has been cleared");
     }
+
     setTotalResponses(total_responses){
         this.loaded = true;
         const default_information = this.html.querySelector(".default_information")
@@ -102,6 +105,7 @@ class Results{
             no_results.classList.remove("not_displayed")
         }
     }
+
     searchData(search_type,search_value,load_more=false){
         if (this.search_value != search_value || this.search_type != search_type || !load_more) { // clear html elements and object witch contain all the older responses
             this.clearResults();
@@ -111,39 +115,54 @@ class Results{
         this.search_value = search_value;
         switch (search_type) {
             case "0":
+
                 requestHandler(reqTitle(search_value,this.offset,this.limit))
                 .then((response)=>{
                     setLoadingSpinner("#footer");
+
                     this.setTotalResponses(response.count);
+
                     response.recordings.forEach(record => {
                         this.setResult(new Result(record,this.modal,0,this.result_count));
                     });
+
                 })                  
                 break;
             case "1":
+
                 requestHandler(reqArtist(search_value,this.offset,this.limit))
                 .then((response)=>{
+
                     setLoadingSpinner("#footer");
+
                     this.setTotalResponses(response.count);
+
                     response.recordings.forEach(record => {
                         this.setResult(new Result(record,this.modal,1,this.result_count));
                     });
+
                 })         
                 break;
             case "2":
+
                 requestHandler(reqAlbum(search_value,this.offset,this.limit))
                 .then((response)=>{
+
                     setLoadingSpinner("#footer");
+
                     this.setTotalResponses(response.count);
+
                     response.recordings.forEach(record => {
                         this.setResult(new Result(record,this.modal,2,this.result_count));
                     });
+
                 })
                 .catch(err=>{
                     console.log(err);
                 })                    
                 break;
             case "3":
+                
                 (async ()=>{
                     const albums = await requestHandler(reqAlbum(search_value,this.offset,this.limit));
                     const titles = await requestHandler(reqTitle(search_value,this.offset,this.limit));

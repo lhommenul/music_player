@@ -12,7 +12,9 @@ function setLoadingSpinner(id_loading_container){
             spinner.alt = "image de chargement";
         container.appendChild(spinner);
     }
-}function requestHandler(request = Promise) {
+}
+
+function requestHandler(request = Promise) {
     return request
     .then(res=>{
         if (res.ok) {
@@ -27,10 +29,14 @@ function setLoadingSpinner(id_loading_container){
 }
 
 function millisToMinutesAndSeconds(millis) {
+
     let minutes = Math.floor(millis / 60000);
+
     let seconds = ((millis % 60000) / 1000).toFixed(0);
+
     return minutes + ":" + (seconds < 10 ? '0' : '') + seconds;
-  }
+
+}
 
 export {
     setLoadingSpinner,

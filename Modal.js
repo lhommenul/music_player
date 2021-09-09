@@ -1,4 +1,4 @@
-import {reqArtistById,reqAlbumById,reqTitleById,reqCoverReleaseById} from "./req.js"
+import {reqArtistById,reqAlbumById,reqTitleById,reqCoverReleaseById} from "./Request.js";
 import {millisToMinutesAndSeconds} from './utils/Utils.js'
 
 class Modal{
@@ -101,17 +101,33 @@ class Modal{
                 break;
         }
         function generateHtml(modal_data) {
-            
+
             const title_container = document.createElement('li');
                 const title = document.createElement('p');
+            // ARTISTS
             const artists_container  = document.createElement('li');
+
+            // RELEASES
             const releases_container  = document.createElement('li');
+
+            // MUSIC LENGTH
             const music_length  = document.createElement('li');
+
+            // GENRES 
             const container_genres  = document.createElement('li');
                 const list_genres = document.createElement('ul');
+
+            // RATING 
             const rating_container  = document.createElement('li');
                 const rating  = document.createElement('p');
+
+            // COVER
             const list_images  = document.createElement('ul');
+
+
+            (()=>{ // generate titles for 
+
+            });
 
             (()=>{ // appends elements
                 console.log(modal_data);
@@ -137,43 +153,79 @@ class Modal{
                 modal_html_container.appendChild(rating_container)
 
                 // LENGTH
-                modal_html_container.appendChild(music_length)
+                modal_html_container.appendChild(music_length);
 
                 // COVER
                 modal_html_container.appendChild(list_images)
             })();
 
             (()=>{ // set data
-                list_images.className = "container_img";
+
+                list_images.className = "container_img"; 
+
                 // music length
-                music_length.textContent = "Duree : "+millisToMinutesAndSeconds(modal_data.length);
+                music_length.textContent = `Duree : ${millisToMinutesAndSeconds(modal_data.length)}`;
+
                 // rating
-
                 if (modal_data.rating.value) rating.textContent = `Note : ${modal_data.rating.value} / 5`;
-                else rating.textContent = "Aucune Note"
+                else rating.textContent = "Aucune Note";
 
-                title.textContent = modal_data.title;
+                // titre
+                title.textContent =  `Titre : ${modal_data.title}`;
 
                 // genres
-                modal_data?.genres.forEach(genre => {
-                    console.log("executed");
-                    const ele_genre = document.createElement("li");
-                    ele_genre.innerText = genre.name;
-                    container_genres.appendChild(ele_genre);
-                });    
-                console.log(container_genres);
+                if (modal_data?.genres.length > 0) {
+                    const ele_genre = document.createElement("p");
+                        ele_genre.innerText = "Genre : ";
+                        container_genres.appendChild(ele_genre);
+
+                    modal_data?.genres.forEach(genre => {
+                        const ele_genre = document.createElement("p");
+                            ele_genre.innerText = genre.name;
+                            container_genres.appendChild(ele_genre);
+                    });    
+                } else {
+                    const ele_genre = document.createElement("p");
+                        ele_genre.innerText = "Genre : Aucune Information";
+                        container_genres.appendChild(ele_genre);
+                }
 
                 // artist-credit
-                modal_data?.['artist-credit'].forEach(artist_data => { // set and append
+                if (modal_data?.['artist-credit'].length > 0) {
                     const artist  = document.createElement('p');
-                    artist.textContent = artist_data.name;
-                    container_genres.appendChild(artist);
-                });
-                modal_data?.releases.forEach(release_data => { // set and append
+                        artist.textContent = "Artist : ";
+                        artists_container.appendChild(artist);
+
+                    modal_data?.['artist-credit'].forEach(artist_data => { // set and append
+                        const artist  = document.createElement('p');
+                            artist.textContent = artist_data.name;
+                            artists_container.appendChild(artist);
+                    });
+                } else {
+                    const artist  = document.createElement('p');
+                        artist.textContent = "Artiste : Aucune Information";
+                        artists_container.appendChild(artist);
+                }
+
+                // releases
+                if (modal_data?.releases.length > 0) { // Generate content for releases
+                    // if there is at least 1 album
                     const release  = document.createElement('p');
-                    release.textContent = release_data.name;
-                    releases_container.appendChild(release);
-                });
+                        release.textContent = "Albums : ";
+                        releases_container.appendChild(release);
+
+                    modal_data?.releases.forEach((release_data) => { 
+                        const release  = document.createElement('p');
+                            release.textContent = release_data.title;
+                            release.className = "album_element"
+                            releases_container.appendChild(release);
+                    });
+                } else { // If there is no albums
+                    const release  = document.createElement('p');
+                        release.textContent = "Pas de d'album"
+                        releases_container.appendChild(release);
+                }
+                
             })();
             (()=>{
                 modal_data.releases.forEach(release=>{
